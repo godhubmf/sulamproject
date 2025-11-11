@@ -1,20 +1,24 @@
 # Security & Privacy
 
-Status: Draft 0.1  
+Status: Draft 0.2  
 Owner: [Your Name]  
-Last updated: [YYYY-MM-DD]
+Last updated: 2025-11-11
+
+## Technology Note
+This system uses plain PHP without frameworks. All security implementations use native PHP functions and best practices.
 
 ## Identity & Access
-- Passwords hashed and salted (bcrypt/argon2).  
-- RBAC enforcement for every route/action (deny-by-default).  
-- Session security, CSRF protection, secure cookies.  
-- Account lockout/attempt throttling.
+- Passwords hashed and salted using PHP's native `password_hash()` and verified with `password_verify()` (uses bcrypt by default).  
+- RBAC enforcement for every route/action (deny-by-default) via custom middleware.  
+- Session security using PHP's native session management with secure configuration, CSRF protection, secure cookies.  
+- Account lockout/attempt throttling implemented in custom logic.
 
 ## Data Protection
-- Input validation and output encoding to prevent SQL injection and XSS.  
+- Input validation and output encoding to prevent SQL injection and XSS using PHP's filter functions.  
 - HTTPS in production (HSTS, modern TLS).  
-- Least-privilege DB user; parameterized queries/ORM.  
-- Document uploads validated and scanned; limit types/sizes; store outside web root or in object storage with signed URLs.
+- Least-privilege DB user; parameterized queries via PDO prepared statements.  
+- Document uploads validated and scanned; limit types/sizes; store outside web root or in protected directory.
+- All database access through PDO with prepared statements (no ORM).
 
 ## Privacy & PDPA Considerations
 - Deceased data outside PDPA, but related living persons’ data must be protected.  
@@ -32,11 +36,13 @@ Last updated: [YYYY-MM-DD]
 - Regular recovery drills; RPO/RTO targets agreed with stakeholders.
 
 ## Secure Development Checklist (MVP)
-- [ ] Password hashing configured and verified.  
-- [ ] RBAC middleware/policies on sensitive routes.  
-- [ ] Input validation + output encoding in all forms/pages.  
+- [ ] Password hashing configured with `password_hash()` and verified.  
+- [ ] RBAC middleware on sensitive routes (custom PHP implementation).  
+- [ ] Input validation + output encoding in all forms/pages (`filter_input()`, `htmlspecialchars()`).  
 - [ ] CSRF tokens on write endpoints; CSP headers where applicable.  
-- [ ] File upload hardening; antivirus scan if available.  
-- [ ] HTTPS enforced in staging/prod; HSTS.  
-- [ ] Audit log append-only; tamper-evident.  
+- [ ] File upload hardening; antivirus scan if available; file type whitelisting.  
+- [ ] HTTPS enforced in staging/prod; HSTS configured.  
+- [ ] Audit log append-only; tamper-evident (in `/features/shared/lib/audit/`).  
 - [ ] Backups encrypted; restore test performed.
+- [ ] PDO with prepared statements for all database queries.
+- [ ] Session configuration: `session.cookie_httponly=1`, `session.cookie_secure=1` (in prod).

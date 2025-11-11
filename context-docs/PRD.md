@@ -1,8 +1,11 @@
 # Product Requirements Document (PRD)
 
-Status: Draft 0.1  
+Status: Draft 0.2  
 Owner: [Your Name]  
-Last updated: [YYYY-MM-DD]
+Last updated: 2025-11-11
+
+**Technology Stack**: Plain PHP, CSS, JavaScript + Vite for bundling  
+**Architecture**: Feature-based modular structure (see ./Feature-Based-Structure.md)
 
 ## 1. Overview
 
@@ -58,6 +61,8 @@ Out of scope (for MVP):
 - Reliability: 99% availability; transactional integrity/backups; auto-recovery from minor failures.
 
 ## 7. Detailed Features by Module
+
+**Architecture Note**: All modules follow the feature-based structure documented in ./Feature-Based-Structure.md. Each feature has its own directory under `/features/` with admin/ and staff/ subdirectories containing controllers, views, ajax endpoints, assets (CSS/JS), and business logic.
 
 ### 7.1 Resident Registry
 - Entities: Household, Individual, Relationship (family/NOK), Contact, Consent, Document.  

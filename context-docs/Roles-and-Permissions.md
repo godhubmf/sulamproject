@@ -1,12 +1,13 @@
 # Roles & Permissions (RBAC)
 
-Status: Draft 0.1  
+Status: Draft 0.2  
 Owner: [Your Name]  
-Last updated: [YYYY-MM-DD]
+Last updated: 2025-11-11
+
+**Implementation Note**: RBAC will be implemented as custom middleware in `/features/shared/lib/auth/`. Each feature module has separate admin/ subdirectories with their own controllers and views, enforcing separation at the architectural level.
 
 ## Roles
 - Admin (can include Treasurer/Finance responsibilities)
-- Staff
 - Regular User
 
 ## Permission Areas
@@ -22,19 +23,18 @@ Last updated: [YYYY-MM-DD]
 
 ## Starter Matrix (MVP)
 
-| Area | Regular | Staff | Admin |
-|------|---------|-------|-------|
-| Users & Roles | - | View own | Full CRUD |
-| Resident Registry | View | View + Create/Update | Full CRUD + Merge |
-| Assistance | View own status | Create/Update apps; view decisions | Approve/Reject; Disburse; Configure |
-| Donations & Receipts | View own receipts | Record donations; issue receipts | Configure; export |
-| Death & Funeral | View | Record notifications; update logistics | Verify; approve assistance |
-| Events & Announcements | View | Create/Publish | Approve/Unpublish |
-| Reports | View public | View operational | View all; export |
-| Audit Log | - | View own actions | View all |
-| System Config | - | - | Full |
+| Area | Regular | Admin |
+|------|---------|-------|
+| Users & Roles | - | Full CRUD |
+| Resident Registry | View | Full CRUD + Merge |
+| Assistance | View own status | Approve/Reject; Disburse; Configure |
+| Donations & Receipts | View own receipts | Configure; export |
+| Death & Funeral | View | Verify; approve assistance |
+| Events & Announcements | View | Approve/Unpublish |
+| Reports | View public | View all; export |
+| Audit Log | - | View all |
+| System Config | - | Full |
 
 Notes:
-- Start with a single Admin role; introduce Treasurer as a scoped Admin later if needed.  
 - "View own" means limited to the user’s own account or actions.  
 - Use deny-by-default; grant minimal privileges per role.

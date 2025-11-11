@@ -1,10 +1,12 @@
 # Data Model & ERD
 
-Status: Draft 0.1  
+Status: Draft 0.2  
 Owner: [Your Name]  
-Last updated: [YYYY-MM-DD]
+Last updated: 2025-11-11
 
 This is a high-level ERD to validate entities and relationships. Final fields and constraints to be refined during implementation.
+
+**Note**: Models/entities will be organized in the feature-based structure (see ./Feature-Based-Structure.md). Each feature module will have its own models in `/features/{feature-name}/shared/lib/`.
 
 ```mermaid
 erDiagram
@@ -51,6 +53,19 @@ Field notes (examples; not exhaustive):
 - FuneralLogistics: death_notification_id, task, assigned_to, due_at, status.  
 - User: id, role, name, email/phone, password_hash.  
 - AuditLog: id, user_id, action, entity, entity_id, before, after, ip, created_at.
+
+## File Organization
+
+Models will be organized by feature:
+- `/features/residents/shared/lib/` - Household.php, Individual.php, Relationship.php, Consent.php, Document.php
+- `/features/assistance/shared/lib/` - Application.php, Assessment.php, Approval.php, Disbursement.php, Receipt.php
+- `/features/donations/shared/lib/` - Donor.php, Donation.php, Pledge.php
+- `/features/death-funeral/shared/lib/` - DeathNotification.php, Verification.php, FuneralLogistics.php
+- `/features/events/shared/lib/` - Event.php
+- `/features/users/shared/lib/` - UserModel.php
+- `/features/shared/lib/audit/` - AuditLog.php
+
+Each model class will use PDO for database operations (no ORM).
 
 Open questions:
 - Approval levels/thresholds?  
