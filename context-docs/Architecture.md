@@ -18,9 +18,8 @@ Last updated: 2025-11-11
 - Resident Registry  
 - Financial (applications, approvals, disbursements)  
 - Death & Funeral  
-- Donations & Receipts  
-- Events & Announcements  
-- Audit Logging  
+- Donations  
+- Events & Announcements 
 - Reporting
 
 ## Project Directory Structure (Feature-Based)
