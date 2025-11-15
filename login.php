@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($rawUsername === '' || $rawPassword === '') {
     $message = 'Please enter your username and password.';
   } else {
-    // Fetch user by username
-    $stmt = $mysqli->prepare('SELECT id, username, email, password_hash FROM `users` WHERE username = ? LIMIT 1');
+  // Fetch user by username including role
+  $stmt = $mysqli->prepare('SELECT id, username, email, roles, password FROM `users` WHERE username = ? LIMIT 1');
     if ($stmt) {
       $stmt->bind_param('s', $rawUsername);
       $stmt->execute();
@@ -21,11 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $user = $result ? $result->fetch_assoc() : null;
       $stmt->close();
 
-      if ($user && password_verify($rawPassword, $user['password_hash'])) {
+      if ($user && password_verify($rawPassword, $user['password'])) {
         // Success: set session and redirect
         session_regenerate_id(true);
         $_SESSION['user_id'] = (int)$user['id'];
         $_SESSION['username'] = $user['username'];
+        $_SESSION['role'] = $user['roles'];
         header('Location: dashboard.php');
         exit;
       } else {

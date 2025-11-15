@@ -15,16 +15,7 @@ $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username'
   </head>
   <body>
     <div class="dashboard">
-      <aside class="sidebar">
-        <div class="brand">OurMasjid</div>
-        <nav class="nav">
-          <a href="dashboard.php">Dashboard</a>
-          <a href="residents.php">Residents</a>
-          <a href="donations.php">Donations</a>
-          <a href="events.php">Events</a>
-          <a href="logout.php">Logout</a>
-        </nav>
-      </aside>
+      <?php $currentPage='dashboard.php'; include __DIR__ . '/includes/sidebar.php'; ?>
 
       <main class="content">
         <div class="small-card" style="max-width:980px;margin:0 auto;padding:1.2rem 1.4rem;">

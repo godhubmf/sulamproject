@@ -1,9 +1,40 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
+require_once __DIR__ . '/db.php';
+if (!isset($_SESSION['user_id'])) { header('Location: login.php'); exit; }
+
+$isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+$message = '';
+$messageClass = 'notice';
+
+// Handle create (admin only)
+if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  $desc = trim($_POST['description'] ?? '');
+  $gamba = null;
+  // Handle file upload if provided
+  if (!empty($_FILES['gamba']['name'])) {
+    $uploadDir = __DIR__ . '/assets/uploads';
+    if (!is_dir($uploadDir)) { @mkdir($uploadDir, 0777, true); }
+    $ext = pathinfo($_FILES['gamba']['name'], PATHINFO_EXTENSION);
+    $basename = 'donation_' . time() . '_' . bin2hex(random_bytes(4)) . ($ext?'.'.preg_replace('/[^a-zA-Z0-9]+/','',$ext):'');
+    $target = $uploadDir . '/' . $basename;
+    if (move_uploaded_file($_FILES['gamba']['tmp_name'], $target)) {
+      $gamba = 'assets/uploads/' . $basename;
+    }
+  } else if (isset($_POST['gamba_url']) && $_POST['gamba_url'] !== '') {
+    $gamba = trim($_POST['gamba_url']);
+  }
+  if ($desc === '') { $message = 'Description is required.'; }
+  else {
+    $stmt = $mysqli->prepare('INSERT INTO donations (description, gamba) VALUES (?, ?)');
+    if ($stmt) { $stmt->bind_param('ss', $desc, $gamba); $stmt->execute(); $stmt->close(); $message='Donation post created'; $messageClass='notice success'; }
+  }
 }
+
+// List donations
+$items = [];
+$res = $mysqli->query('SELECT id, description, gamba, created_at FROM donations ORDER BY id DESC');
+if ($res) { while ($row = $res->fetch_assoc()) { $items[] = $row; } $res->close(); }
 ?><!doctype html>
 <html lang="en">
   <head>
@@ -14,20 +45,46 @@ if (!isset($_SESSION['user_id'])) {
   </head>
   <body>
     <div class="dashboard">
-      <aside class="sidebar">
-        <div class="brand">OurMasjid</div>
-        <nav class="nav">
-          <a href="dashboard.php">Dashboard</a>
-          <a href="residents.php">Residents</a>
-          <a href="donations.php">Donations</a>
-          <a href="events.php">Events</a>
-          <a href="logout.php">Logout</a>
-        </nav>
-      </aside>
+      <?php $currentPage='donations.php'; include __DIR__ . '/includes/sidebar.php'; ?>
       <main class="content">
         <div class="small-card" style="max-width:980px;margin:0 auto;">
           <h2>Donations</h2>
-          <p>This section is coming soon.</p>
+          <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
+
+          <?php if ($isAdmin): ?>
+          <h3>Create Donation Post</h3>
+          <form method="post" enctype="multipart/form-data">
+            <label>Description
+              <textarea name="description" rows="3" required></textarea>
+            </label>
+            <div class="grid-2">
+              <label>Gamba (upload)
+                <input type="file" name="gamba" accept="image/*">
+              </label>
+              <label>or Gamba URL
+                <input type="url" name="gamba_url" placeholder="https://...">
+              </label>
+            </div>
+            <div class="actions">
+              <button class="btn" type="submit">Publish</button>
+            </div>
+          </form>
+          <?php endif; ?>
+
+          <h3 style="margin-top:1.5rem;">Latest</h3>
+          <?php if (empty($items)): ?>
+            <p>No donation posts yet.</p>
+          <?php else: ?>
+            <div class="cards">
+              <?php foreach ($items as $d): ?>
+                <div class="card">
+                  <?php if (!empty($d['gamba'])): ?><img src="<?php echo htmlspecialchars($d['gamba']); ?>" alt="Donation image" style="max-width:100%;height:auto;"><?php endif; ?>
+                  <p><?php echo nl2br(htmlspecialchars($d['description'])); ?></p>
+                  <small>Posted: <?php echo htmlspecialchars($d['created_at']); ?></small>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
         </div>
       </main>
     </div>

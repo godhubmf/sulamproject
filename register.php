@@ -3,14 +3,18 @@ $message = '';
 $messageClass = 'notice';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  require_once __DIR__ . '/db.php'; // ensures DB and `users` table exist in `masjid`
+  require_once __DIR__ . '/db.php'; // ensures DB and `users` table exist in `masjidkamek`
 
   // Collect & validate inputs
+  $rawName = isset($_POST['name']) ? trim($_POST['name']) : '';
   $rawUsername = isset($_POST['username']) ? trim($_POST['username']) : '';
   $rawEmail = isset($_POST['email']) ? trim($_POST['email']) : '';
   $rawPassword = isset($_POST['password']) ? $_POST['password'] : '';
 
   $errors = [];
+  if ($rawName === '' || strlen($rawName) > 120) {
+    $errors[] = 'Name is required and must be at most 120 characters.';
+  }
   if ($rawUsername === '' || strlen($rawUsername) < 3 || strlen($rawUsername) > 50) {
     $errors[] = 'Username must be between 3 and 50 characters.';
   }
@@ -24,14 +28,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   if (empty($errors)) {
+    $name = $mysqli->real_escape_string($rawName);
     $username = $mysqli->real_escape_string($rawUsername);
     $email = $mysqli->real_escape_string($rawEmail);
     $passwordHash = password_hash($rawPassword, PASSWORD_DEFAULT);
 
-  // Use prepared statement for insert into masjid.users
-  $stmt = $mysqli->prepare('INSERT INTO `users` (username, email, password_hash) VALUES (?, ?, ?)');
+  // Use prepared statement for insert into users
+  $stmt = $mysqli->prepare('INSERT INTO `users` (name, username, email, password) VALUES (?, ?, ?, ?)');
     if ($stmt) {
-      $stmt->bind_param('sss', $username, $email, $passwordHash);
+      $stmt->bind_param('ssss', $name, $username, $email, $passwordHash);
       if ($stmt->execute()) {
         $message = 'Registration successful. You can now log in.';
         $messageClass = 'notice success';
@@ -71,6 +76,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
 
       <form method="post" action="register.php">
+        <label>Name
+          <input type="text" name="name" maxlength="120" required>
+        </label>
         <label>Username
           <input type="text" name="username" minlength="3" maxlength="50" required>
         </label>
