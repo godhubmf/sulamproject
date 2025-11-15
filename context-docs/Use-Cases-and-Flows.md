@@ -1,8 +1,10 @@
 # Use Cases & Flows
 
-Status: Draft 0.1  
+Status: Draft 0.2  
 Owner: [Your Name]  
-Last updated: [YYYY-MM-DD]
+Last updated: 2025-11-11
+
+**Architecture Note**: All use cases map to feature modules in `/features/`. See ./Feature-Based-Structure.md for detailed file organization.
 
 ## Primary Use Cases
 - Register household and individuals; manage relationships and documents.  
@@ -16,7 +18,7 @@ Last updated: [YYYY-MM-DD]
 ## Flow: Assistance (Application → Receipt)
 ```mermaid
 flowchart TD
-  A[Applicant/Staff creates application] --> B[Eligibility/Assessment]
+  A[Applicant creates application] --> B[Eligibility/Assessment]
   B --> C{Approve?}
   C -- No --> R[Reject with reason]
   C -- Yes --> D[Approval recorded]

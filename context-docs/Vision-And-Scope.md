@@ -1,8 +1,15 @@
 # Vision & Scope
 
-Status: Draft 0.1  
+Status: Draft 0.2  
 Owner: [Your Name]  
-Last updated: [YYYY-MM-DD]
+Last updated: 2025-11-11
+
+## Technology Stack
+- Backend: Plain PHP (no frameworks)
+- Frontend: Plain HTML, CSS, JavaScript  
+- Build Tool: Vite for bundling
+- Database: MySQL/MariaDB
+- Architecture: Feature-based modular structure (see ./Feature-Based-Structure.md)
 
 ## Vision
 A unified, secure, and auditable system that ensures no resident in need is overlooked, replacing spreadsheets and fragmented tools with reliable, searchable records and clear assistance workflows.
@@ -27,8 +34,10 @@ A unified, secure, and auditable system that ensures no resident in need is over
 - Compliance: password hashing, RBAC, input validation, HTTPS in production.
 
 ## Assumptions
-- Initial deployment on existing infrastructure (e.g., Laragon/MySQL for dev).  
-- Staff are available for UAT and data migration.
+- Initial deployment on existing infrastructure (e.g., Laragon/MySQL for dev).
+- Administrators and users are available for UAT and data migration.
+- No frameworks policy: Plain PHP, CSS, JS only; Vite for bundling.
+- Feature-based directory structure for better maintainability.
 
 ## Dependencies
 - Stakeholder sign-off on RBAC and approval flows.  
