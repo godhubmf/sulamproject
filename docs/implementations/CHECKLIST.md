@@ -25,6 +25,14 @@
 - [x] CSS variables file
 - [x] Base CSS with feature-prefixed classes
 - [x] Split old monolithic CSS
+- [x] Page header component (breadcrumb, title, subtitle, actions)
+- [x] Integrated page header into app-layout
+- [x] Page header CSS styles matching styleguide
+- [x] Page header documentation
+- [x] Sidebar component modernization (icons, user profile, footer)
+- [x] Sidebar CSS styles matching styleguide
+- [x] Sidebar responsive design updates
+- [x] Sidebar documentation
 
 ### Features - Authentication
 - [x] AuthController (login, register, logout)

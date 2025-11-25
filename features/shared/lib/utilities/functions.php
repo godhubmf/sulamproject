@@ -8,11 +8,21 @@ function e($string) {
     return htmlspecialchars($string ?? '', ENT_QUOTES, 'UTF-8');
 }
 
+function url($path = '') {
+    $base = defined('APP_BASE_PATH') ? APP_BASE_PATH : '';
+    $path = ltrim($path, '/');
+    return $base . '/' . $path;
+}
+
 function redirect($url) {
-    // Add base path if not already present and not an absolute URL
-    if (strpos($url, 'http') !== 0 && strpos($url, '/sulamproject') !== 0) {
-        $url = '/sulamproject' . $url;
+    // If it's a full URL, just redirect
+    if (strpos($url, 'http') === 0) {
+        header("Location: $url");
+        exit();
     }
+    
+    // Otherwise, use the url() helper
+    $url = url($url);
     header("Location: $url");
     exit();
 }

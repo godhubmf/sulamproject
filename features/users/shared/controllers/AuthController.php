@@ -32,11 +32,15 @@ class AuthController {
         
         $csrfToken = generateCsrfToken();
         
+        $initialView = 'login';
+        
         ob_start();
         include __DIR__ . '/../views/login.php';
         $content = ob_get_clean();
         
         $pageTitle = 'Login';
+        $additionalStyles = [url('features/users/shared/assets/css/login.css')];
+        $additionalScripts = [url('features/users/shared/assets/js/login.js')];
         include __DIR__ . '/../../../shared/components/layouts/base.php';
     }
     
@@ -86,11 +90,23 @@ class AuthController {
         
         $csrfToken = generateCsrfToken();
         
+        $initialView = 'register';
+
         ob_start();
-        include __DIR__ . '/../views/register.php';
+        include __DIR__ . '/../views/login.php';
         $content = ob_get_clean();
         
         $pageTitle = 'Register';
+        $additionalStyles = [
+            url('features/shared/assets/css/layout.css'),
+            url('features/shared/assets/css/cards.css'),
+            url('features/shared/assets/css/forms.css'),
+            url('features/shared/assets/css/buttons.css'),
+            url('features/shared/assets/css/notices.css'),
+            url('features/shared/assets/css/typography.css'),
+            url('features/users/shared/assets/css/login.css')
+        ];
+        $additionalScripts = [url('features/users/shared/assets/js/login.js')];
         include __DIR__ . '/../../../shared/components/layouts/base.php';
     }
     
@@ -107,6 +123,7 @@ class AuthController {
             redirect('/register');
         }
         
+        $name = trim($_POST['name'] ?? '');
         $username = trim($_POST['username'] ?? '');
         $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
@@ -114,6 +131,10 @@ class AuthController {
         
         // Validation
         $errors = [];
+
+        if (empty($name) || strlen($name) > 120) {
+            $errors[] = 'Name is required and must be at most 120 characters.';
+        }
         
         $usernameValidation = validateUsername($username);
         if (!$usernameValidation['valid']) {
@@ -139,7 +160,7 @@ class AuthController {
             redirect('/register');
         }
         
-        $result = $this->authService->register($username, $email, $password);
+        $result = $this->authService->register($name, $username, $email, $password);
         
         if ($result['success']) {
             $this->auditLog->logCreate('user', $result['user_id']);

@@ -7,12 +7,17 @@
         </div>
     <?php endif; ?>
 
-    <form method="post" action="/sulamproject/register">
+    <form method="post" action="<?php echo url('register'); ?>">
         <?php echo csrfField(); ?>
         
         <label>
+            Name
+            <input type="text" name="name" required autofocus maxlength="120">
+        </label>
+
+        <label>
             Username
-            <input type="text" name="username" required autofocus pattern="[a-zA-Z0-9_]{3,20}" 
+            <input type="text" name="username" required pattern="[a-zA-Z0-9_]{3,20}" 
                    title="3-20 characters, letters, numbers, and underscore only">
         </label>
         

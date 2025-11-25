@@ -1,0 +1,32 @@
+/* Footer */
+.site-footer {
+  margin-top: auto; /* stick to bottom on short pages */
+  border-top: 1px solid var(--border-subtle);
+  padding: 1rem 1.25rem;
+  background: #065f46; /* slightly dark green */
+  color: #e6eef7; /* light text for contrast */
+}
+
+.site-footer .container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.site-footer a { 
+  color: #ffffff; 
+  text-decoration: none; 
+}
+
+.site-footer a:hover { 
+  text-decoration: underline; 
+}
+
+.site-footer strong { 
+  color: #ffffff; 
+}

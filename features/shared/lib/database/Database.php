@@ -10,7 +10,7 @@ class Database {
     
     private function __construct() {
         $host = getenv('DB_HOST') ?: 'localhost';
-        $dbname = getenv('DB_NAME') ?: 'masjid';
+        $dbname = getenv('DB_NAME') ?: 'masjidkamek';
         $username = getenv('DB_USER') ?: 'root';
         $password = getenv('DB_PASS') ?: '';
         $charset = 'utf8mb4';

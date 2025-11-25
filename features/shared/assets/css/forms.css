@@ -1,0 +1,50 @@
+/* Forms */
+label {
+  display: block;
+  text-align: left;
+  margin: 0.6rem 0;
+  color: var(--muted);
+}
+
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=number],
+textarea,
+select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=email]:focus,
+input[type=number]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(15, 138, 95, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+/* Simple grid helpers for forms */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem;
+}

@@ -1,0 +1,82 @@
+/* Responsive */
+@media (max-width: 960px) {
+  .dashboard {
+    flex-direction: column;
+    padding-left: 0; /* remove fixed offset on small screens */
+  }
+  
+  .sidebar {
+    position: static;
+    height: auto;
+    width: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  
+  /* Adjust logo and brand on smaller screens */
+  .sidebar .logo-container {
+    height: 78px;
+  }
+  
+  .sidebar .sidebar-logo {
+    max-height: 78px;
+  }
+  
+  .sidebar .brand-text {
+    font-size: 1.1rem;
+  }
+  
+  .dashboard-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .grid-3 { 
+    grid-template-columns: 1fr 1fr; 
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .footer-grid { 
+    grid-template-columns: 1fr; 
+    text-align: center; 
+  }
+}
+
+@media (max-width: 560px) {
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-2 { 
+    grid-template-columns: 1fr; 
+  }
+  
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .actions {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
+  .centered {
+    padding: 1.5rem;
+    margin: 4vh auto;
+  }
+}

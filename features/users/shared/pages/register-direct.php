@@ -74,14 +74,14 @@ $styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Register — SulamProject</title>
-  <link rel="stylesheet" href="/sulamproject/assets/css/style.css?v=<?php echo $styleVersion; ?>">
+  <link rel="stylesheet" href="/sulamprojectex/assets/css/style.css?v=<?php echo $styleVersion; ?>">
   </head>
   <body>
   <main class="centered small-card">
       <h2>Register</h2>
       <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
 
-  <form method="post" action="/sulamproject/register">
+  <form method="post" action="/sulamprojectex/register">
         <label>Name
           <input type="text" name="name" maxlength="120" required>
         </label>
@@ -96,7 +96,7 @@ $styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
         </label>
         <div class="actions">
           <button class="btn" type="submit">Create account</button>
-          <a class="btn outline" href="/sulamproject/login">Back to Login</a>
+          <a class="btn outline" href="/sulamprojectex/login">Back to Login</a>
         </div>
       </form>
     </main>

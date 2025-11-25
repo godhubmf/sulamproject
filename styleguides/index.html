@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SulamProject Styleguide</title>
+    
+    <!-- Font Awesome for icon examples -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Isolated Styleguide CSS -->
+    <link rel="stylesheet" href="styleguide.css">
+</head>
+<body>
+    
+    <header style="margin-bottom: 3rem; text-align: center;">
+        <h1>SulamProject Design System</h1>
+        <p class="lead">A unified styleguide for all modules and pages.</p>
+    </header>
+
+    <!-- COLORS -->
+    <section class="sg-section">
+        <div class="sg-title">Colors</div>
+        <p>The color palette is defined in <code>features/shared/assets/css/variables.css</code>.</p>
+        
+        <div class="sg-subtitle">Core Colors</div>
+        <div class="color-grid">
+            <div class="color-card">
+                <div class="color-swatch" style="background-color: var(--accent);"></div>
+                <div class="color-info">
+                    <span class="color-name">Accent / Primary</span>
+                    <span class="color-var">--accent</span>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background-color: var(--bg); border-bottom: 1px solid #eee;"></div>
+                <div class="color-info">
+                    <span class="color-name">Background</span>
+                    <span class="color-var">--bg</span>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background-color: var(--text-primary);"></div>
+                <div class="color-info">
+                    <span class="color-name">Text Primary</span>
+                    <span class="color-var">--text-primary</span>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background-color: var(--muted);"></div>
+                <div class="color-info">
+                    <span class="color-name">Muted Text</span>
+                    <span class="color-var">--muted</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sg-subtitle" style="margin-top: 2rem;">Sidebar Theme</div>
+        <div class="color-grid">
+            <div class="color-card">
+                <div class="color-swatch" style="background-color: var(--sidebar-bg);"></div>
+                <div class="color-info">
+                    <span class="color-name">Sidebar BG</span>
+                    <span class="color-var">--sidebar-bg</span>
+                </div>
+            </div>
+            <div class="color-card">
+                <div class="color-swatch" style="background-color: var(--sidebar-active-bg);"></div>
+                <div class="color-info">
+                    <span class="color-name">Active Item BG</span>
+                    <span class="color-var">--sidebar-active-bg</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section class="sg-section">
+        <div class="sg-title">Typography</div>
+        <p>Font Family: <code>Segoe UI, Roboto, Arial, sans-serif</code></p>
+
+        <div class="type-example">
+            <h1>Heading 1</h1>
+            <h2>Heading 2</h2>
+            <h3>Heading 3</h3>
+            <h4>Heading 4</h4>
+            <p>This is a standard paragraph. It uses <code>--text-primary</code> color. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.</p>
+            <p class="lead">This is a lead paragraph (class <code>.lead</code>). It is used for subtitles or introductory text.</p>
+            <p><small>This is small text.</small></p>
+        </div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section class="sg-section">
+        <div class="sg-title">Buttons</div>
+        <p>Standard button classes used across the application.</p>
+
+        <div class="btn-grid">
+            <div>
+                <button class="btn">Primary Button</button>
+                <pre>&lt;button class="btn"&gt;Action&lt;/button&gt;</pre>
+            </div>
+            <div>
+                <button class="btn outline">Outline Button</button>
+                <pre>&lt;button class="btn outline"&gt;Cancel&lt;/button&gt;</pre>
+            </div>
+            <div>
+                <button class="btn" disabled style="opacity: 0.6; cursor: not-allowed;">Disabled</button>
+                <pre>&lt;button class="btn" disabled&gt;Disabled&lt;/button&gt;</pre>
+            </div>
+        </div>
+
+        <div class="sg-subtitle" style="margin-top: 1.5rem;">Button Groups</div>
+        <div class="actions" style="justify-content: flex-start; border: 1px dashed #ccc; padding: 1rem;">
+            <button class="btn outline">Cancel</button>
+            <button class="btn">Save Changes</button>
+        </div>
+        <pre>&lt;div class="actions"&gt;
+    &lt;button class="btn outline"&gt;Cancel&lt;/button&gt;
+    &lt;button class="btn"&gt;Save Changes&lt;/button&gt;
+&lt;/div&gt;</pre>
+    </section>
+
+    <!-- FORMS -->
+    <section class="sg-section">
+        <div class="sg-title">Forms</div>
+        <p>Standard form elements. All inputs should have <code>width: 100%</code> by default.</p>
+
+        <div style="max-width: 500px;">
+            <div class="form-group">
+                <label>Text Input</label>
+                <input type="text" placeholder="Enter text...">
+            </div>
+            
+            <div class="form-group">
+                <label>Email Input</label>
+                <input type="email" placeholder="user@example.com">
+            </div>
+
+            <div class="form-group">
+                <label>Select Dropdown</label>
+                <select>
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Textarea</label>
+                <textarea rows="3" placeholder="Enter description..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Input with Focus State</label>
+                <input type="text" placeholder="Click to see focus effect" autofocus>
+            </div>
+        </div>
+
+        <div class="sg-subtitle" style="margin-top: 2rem;">Form Grid Helpers</div>
+        <p>Use <code>.grid-2</code> or <code>.grid-3</code> for multi-column forms.</p>
+        <div style="max-width: 700px;">
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" placeholder="John">
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" placeholder="Doe">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LINKS & TYPOGRAPHY UTILITIES -->
+    <section class="sg-section">
+        <div class="sg-title">Links & Typography Utilities</div>
+        
+        <div class="sg-subtitle">Links</div>
+        <p>Links use the <code>--accent</code> color and have hover effects.</p>
+        <p>
+            This is a paragraph with a <a href="#">standard link</a> inside. 
+            Links are styled with the primary accent color.
+        </p>
+
+        <div class="sg-subtitle" style="margin-top: 1.5rem;">Small Text</div>
+        <p>Use <code>.small</code> class or <code>&lt;small&gt;</code> tag for smaller text.</p>
+        <p class="small">This is small text using the .small class</p>
+        <p><small>This is small text using the &lt;small&gt; tag</small></p>
+    </section>
+
+    <!-- ICONS -->
+    <section class="sg-section">
+        <div class="sg-title">Icons</div>
+        <p>Icons use inline SVG with the <code>.icon</code> wrapper for consistent sizing.</p>
+        
+        <div style="display: flex; gap: 2rem; align-items: center;">
+            <div>
+                <i class="fa-solid fa-users icon" aria-hidden="true"></i>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem;">User Icon</p>
+            </div>
+            <div>
+                <i class="fa-solid fa-calendar-days icon" aria-hidden="true"></i>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem;">Calendar Icon</p>
+            </div>
+            <div>
+                <i class="fa-solid fa-coins icon" aria-hidden="true"></i>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem;">Donation Icon</p>
+            </div>
+        </div>
+        <pre>&lt;i class="fa-solid fa-users icon" aria-hidden="true"&gt;&lt;/i&gt;
+&lt;!-- or --&gt;
+&lt;span class="icon"&gt;
+    &lt;i class="fa-solid fa-users"&gt;&lt;/i&gt;
+&lt;/span&gt;</pre>
+    </section>
+
+    <!-- CARDS & CONTAINERS -->
+    <section class="sg-section">
+        <div class="sg-title">Cards & Containers</div>
+        
+        <div class="sg-subtitle">Small Card</div>
+        <p>Used for login forms, small widgets, or focused content.</p>
+        <div class="small-card" style="max-width: 400px;">
+            <h3>Login</h3>
+            <p>Please sign in to continue.</p>
+            <button class="btn" style="width: 100%">Sign In</button>
+        </div>
+        <pre>&lt;div class="small-card"&gt;...&lt;/div&gt;</pre>
+
+        <div class="sg-subtitle" style="margin-top: 2rem;">Page Card</div>
+        <p>The main container for page content.</p>
+        <div class="page-card" style="margin: 0; max-width: 100%;">
+            <h2>Page Title</h2>
+            <p>This is the main content area of a page. It has a subtle gradient background and shadow.</p>
+            <div class="actions" style="justify-content: flex-start;">
+                <button class="btn">Primary Action</button>
+            </div>
+        </div>
+        <pre>&lt;div class="page-card"&gt;...&lt;/div&gt;</pre>
+    </section>
+
+    <!-- NOTICES / ALERTS -->
+    <section class="sg-section">
+        <div class="sg-title">Notices & Alerts</div>
+        <p>Use <code>.notice</code> class with optional variants for user feedback.</p>
+
+        <div style="max-width: 600px;">
+            <div class="notice">
+                This is a default notice for informational messages.
+            </div>
+
+            <div class="notice success">
+                Success! Your changes have been saved.
+            </div>
+
+            <div class="notice error">
+                Error: Something went wrong. Please try again.
+            </div>
+        </div>
+
+        <pre>&lt;div class="notice"&gt;Info message&lt;/div&gt;
+&lt;div class="notice success"&gt;Success message&lt;/div&gt;
+&lt;div class="notice error"&gt;Error message&lt;/div&gt;</pre>
+    </section>
+
+    <!-- TOASTS / NOTIFICATIONS -->
+    <section class="sg-section">
+        <div class="sg-title">Toasts / Notifications</div>
+        <p>Toast notifications are overlay messages that appear in the corner (usually top-right) and auto-dismiss. Use <code>.toast</code> with variant classes.</p>
+        
+        <div class="sg-subtitle">Toast Container</div>
+        <p>Toasts should be placed inside a fixed container. Position: <code>top-right</code> by default.</p>
+        
+        <!-- Live toast examples (static for preview) -->
+        <div style="position: relative; height: 380px; background: var(--bg); border: 2px dashed var(--border-subtle); border-radius: 8px; padding: 1rem;">
+            <p style="color: var(--muted); font-size: 0.85rem; margin: 0;">Preview area (toasts would appear in top-right corner)</p>
+            
+            <!-- Simulated toast container for demo -->
+            <div style="position: absolute; top: 1rem; right: 1rem; display: flex; flex-direction: column; gap: 0.75rem; max-width: 380px;">
+                
+                <div class="toast toast--success" role="status" aria-live="polite" aria-atomic="true">
+                    <span class="toast__icon" aria-hidden="true">✓</span>
+                    <div class="toast__message">Changes saved successfully.</div>
+                    <button class="toast__close" aria-label="Dismiss notification">×</button>
+                </div>
+
+                <div class="toast toast--error" role="alert" aria-live="assertive" aria-atomic="true">
+                    <span class="toast__icon" aria-hidden="true">✕</span>
+                    <div class="toast__message">Failed to delete item. Please try again.</div>
+                    <button class="toast__close" aria-label="Dismiss notification">×</button>
+                </div>
+
+                <div class="toast toast--info" role="status" aria-live="polite" aria-atomic="true">
+                    <span class="toast__icon" aria-hidden="true">ℹ</span>
+                    <div class="toast__message">New updates available.</div>
+                    <button class="toast__close" aria-label="Dismiss notification">×</button>
+                </div>
+
+                <div class="toast toast--warning" role="status" aria-live="polite" aria-atomic="true">
+                    <span class="toast__icon" aria-hidden="true">⚠</span>
+                    <div class="toast__message">Session will expire in 5 minutes.</div>
+                    <button class="toast__close" aria-label="Dismiss notification">×</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="sg-subtitle" style="margin-top: 1.5rem;">Usage</div>
+        <pre>&lt;!-- Toast Container (fixed position) --&gt;
+&lt;div id="toast-container" aria-live="polite" aria-atomic="true"&gt;
+    
+    &lt;!-- Success Toast --&gt;
+    &lt;div class="toast toast--success" role="status"&gt;
+        &lt;span class="toast__icon" aria-hidden="true"&gt;✓&lt;/span&gt;
+        &lt;div class="toast__message"&gt;Changes saved successfully.&lt;/div&gt;
+        &lt;button class="toast__close" aria-label="Dismiss"&gt;×&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Error Toast --&gt;
+    &lt;div class="toast toast--error" role="alert" aria-live="assertive"&gt;
+        &lt;span class="toast__icon" aria-hidden="true"&gt;✕&lt;/span&gt;
+        &lt;div class="toast__message"&gt;Failed to complete action.&lt;/div&gt;
+        &lt;button class="toast__close" aria-label="Dismiss"&gt;×&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Info Toast --&gt;
+    &lt;div class="toast toast--info" role="status"&gt;
+        &lt;span class="toast__icon" aria-hidden="true"&gt;ℹ&lt;/span&gt;
+        &lt;div class="toast__message"&gt;New updates available.&lt;/div&gt;
+        &lt;button class="toast__close" aria-label="Dismiss"&gt;×&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Warning Toast --&gt;
+    &lt;div class="toast toast--warning" role="status"&gt;
+        &lt;span class="toast__icon" aria-hidden="true"&gt;⚠&lt;/span&gt;
+        &lt;div class="toast__message"&gt;Session expiring soon.&lt;/div&gt;
+        &lt;button class="toast__close" aria-label="Dismiss"&gt;×&lt;/button&gt;
+    &lt;/div&gt;
+
+&lt;/div&gt;</pre>
+
+        <div class="sg-subtitle" style="margin-top: 1.5rem;">Accessibility Notes</div>
+        <ul style="color: var(--muted); font-size: 0.9rem;">
+            <li>Use <code>role="status"</code> with <code>aria-live="polite"</code> for non-critical messages (success, info).</li>
+            <li>Use <code>role="alert"</code> with <code>aria-live="assertive"</code> for critical errors.</li>
+            <li>Add <code>aria-atomic="true"</code> so screen readers announce the entire message.</li>
+            <li>Close button must have <code>aria-label="Dismiss notification"</code>.</li>
+            <li>Icon should have <code>aria-hidden="true"</code> (semantic info is in text).</li>
+            <li>JavaScript should auto-dismiss after 3-5 seconds, pause on hover/focus.</li>
+        </ul>
+
+        <div class="sg-subtitle" style="margin-top: 1.5rem;">Variants</div>
+        <ul style="color: var(--muted); font-size: 0.9rem;">
+            <li><code>.toast--success</code> – Green accent, checkmark icon</li>
+            <li><code>.toast--error</code> – Red accent, X icon</li>
+            <li><code>.toast--info</code> – Blue accent, info icon</li>
+            <li><code>.toast--warning</code> – Orange accent, warning icon</li>
+        </ul>
+    </section>
+
+    <!-- LAYOUT STRUCTURE -->
+    <section class="sg-section">
+        <div class="sg-title">Layout Structure</div>
+        <p>The application uses a Sidebar + Content layout for authenticated pages.</p>
+
+        <div class="layout-preview">
+            <div class="lp-sidebar">
+                <div style="font-weight: bold; margin-bottom: 1rem; color: white;">SulamProject</div>
+                <div style="margin-bottom: 0.5rem; color: white;">Dashboard</div>
+                <div style="margin-bottom: 0.5rem;">Residents</div>
+                <div style="margin-bottom: 0.5rem;">Donations</div>
+            </div>
+            <div class="lp-content">
+                <div class="lp-header">
+                    <h3>Dashboard</h3>
+                    <div style="font-size: 0.8rem;">User Profile</div>
+                </div>
+                <div style="background: var(--card-bg); border: 1px solid var(--card-border); height: 150px; border-radius: 8px; padding: 1rem;">
+                    Page Content...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section class="sg-section">
+        <div class="sg-title">Footer</div>
+        <p>The site footer appears at the bottom of pages with dark green background.</p>
+
+        <footer class="site-footer" style="margin: 1rem 0;">
+            <div class="container">
+                <div class="footer-grid">
+                    <div>
+                        <strong>SulamProject</strong>
+                        <p style="margin: 0.5rem 0 0;">Mosque community management system.</p>
+                    </div>
+                    <div>
+                        <strong>Quick Links</strong>
+                        <p style="margin: 0.5rem 0 0;">
+                            <a href="#">Dashboard</a> • 
+                            <a href="#">Residents</a> • 
+                            <a href="#">Events</a>
+                        </p>
+                    </div>
+                    <div>
+                        <strong>Contact</strong>
+                        <p style="margin: 0.5rem 0 0;">© 2025 SulamProject</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <pre>&lt;footer class="site-footer"&gt;
+    &lt;div class="container"&gt;
+        &lt;div class="footer-grid"&gt;
+            &lt;!-- Footer content --&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/footer&gt;</pre>
+    </section>
+
+</body>
+</html>

@@ -36,7 +36,7 @@ class BaseController {
     }
     
     protected function redirectToLogin() {
-        redirect('/sulamproject/login');
+        redirect('/login');
     }
     
     protected function forbidden() {
