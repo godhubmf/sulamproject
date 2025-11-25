@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Template - SulamProject</title>
+    
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="../features/shared/assets/css/variables.css">
+    <link rel="stylesheet" href="../features/shared/assets/css/base.css">
+    <link rel="stylesheet" href="../features/shared/assets/css/typography.css">
+    <link rel="stylesheet" href="../features/shared/assets/css/layout.css">
+    <link rel="stylesheet" href="../features/shared/assets/css/buttons.css">
+    <link rel="stylesheet" href="../features/shared/assets/css/cards.css">
+    <link rel="stylesheet" href="../features/shared/assets/css/forms.css">
+    <link rel="stylesheet" href="../features/shared/assets/css/notices.css">
+    <link rel="stylesheet" href="../features/shared/assets/css/responsive.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* Template-specific styles */
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .dashboard-wrapper {
+            display: flex;
+            flex: 1;
+            gap: 1rem;
+        }
+
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+        }
+
+        .content {
+            flex: 1;
+            padding: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .card-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            display: inline-block;
+            width: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th {
+            border-bottom: 2px solid #eee;
+            text-align: left;
+            padding: 0.75rem;
+        }
+
+        .data-table td {
+            border-bottom: 1px solid #eee;
+            padding: 0.75rem;
+        }
+
+        .badge-active {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+        }
+
+        .badge-pending {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+        }
+        
+        .logo-placeholder {
+            width: 100%;
+            height: 100px;
+            background: #fff;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: #333;
+            font-size: 0.8rem;
+        }
+
+        .brand-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--sidebar-active-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text i {
+            font-size: 1.1rem;
+        }
+        
+        .sidebar .nav a {
+            color: var(--sidebar-link);
+            text-decoration: none;
+            padding: 0.5rem 0.6rem;
+            border-radius: 8px;
+            transition: background .15s ease, color .15s ease;
+            position: relative;
+        }
+
+        .sidebar .nav a:hover {
+            background: var(--sidebar-link-hover-bg);
+            color: var(--sidebar-active-text);
+        }
+
+        .sidebar .nav a.active {
+            background: var(--sidebar-active-bg);
+            color: var(--sidebar-active-text);
+        }
+
+        .sidebar .nav a.active::after {
+            content: '';
+            position: absolute;
+            right: 0.6rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+
+        .nav-divider {
+            margin-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 0.5rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0.6rem;
+            margin-bottom: 0.5rem;
+            color: var(--sidebar-link);
+            border-radius: 8px;
+            background: rgba(15,138,95,0.1);
+        }
+
+        .user-profile .fa-user-circle {
+            font-size: 2rem;
+            color: var(--sidebar-link);
+        }
+
+        .user-profile .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .sidebar-footer a {
+            color: var(--sidebar-link);
+            text-decoration: none;
+            padding: 0.5rem 0.6rem;
+            border-radius: 8px;
+            transition: background .15s ease, color .15s ease;
+        }
+
+        .sidebar-footer a:hover {
+            background: var(--sidebar-link-hover-bg);
+            color: var(--sidebar-active-text);
+        }
+
+        /* Page Header & Breadcrumb Styles */
+        .breadcrumb {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0;
+            margin-bottom: 0.5rem;
+            list-style: none;
+            font-size: 0.85rem;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            float: left;
+            padding-right: 0.5rem;
+            padding-left: 0.5rem;
+            color: var(--muted);
+            content: "/";
+        }
+
+        .breadcrumb-item a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--muted);
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Page Header Box Style */
+        .dashboard-header {
+            background-color: #ffffff;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Dashboard Layout Container -->
+    <div class="dashboard">
+        
+        <div class="dashboard-wrapper">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-text">
+                    <i class="fa-solid fa-mosque"></i> masjidkamek
+                </div>
+                <div class="logo-placeholder">
+                    Logo
+                </div>
+            </div>
+            
+            <nav class="nav">
+                <a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="#"><i class="fas fa-users"></i> Residents</a>
+                <a href="#"><i class="fas fa-hand-holding-heart"></i> Donations</a>
+                <a href="#"><i class="fas fa-calendar-alt"></i> Events</a>
+                <a href="#"><i class="fas fa-file-alt"></i> Reports</a>
+                <div class="nav-divider">
+                    <div class="user-profile">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">Admin User</span>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+            
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content">
+            
+            <!-- Page Header (Loaded via JS) -->
+            <div id="page-header-container"></div>
+
+            <!-- Content Grid/Sections -->
+            
+            <!-- Example: Stats Cards -->
+            <div class="stats-grid">
+                <div class="card">
+                    <h3>Total Residents</h3>
+                    <div class="stats-value">1,234</div>
+                    <p class="text-muted">+5% from last month</p>
+                </div>
+                <div class="card">
+                    <h3>Total Donations</h3>
+                    <div class="stats-value">RM 15,000</div>
+                    <p class="text-muted">This month</p>
+                </div>
+                <div class="card">
+                    <h3>Upcoming Events</h3>
+                    <div class="stats-value">3</div>
+                    <p class="text-muted">Next 7 days</p>
+                </div>
+            </div>
+
+            <!-- Example: Main Section -->
+            <div class="card">
+                <div class="card-header card-header-flex">
+                    <h2>Main Content Section</h2>
+                    <div class="filters">
+                        <input type="text" class="form-control search-input" placeholder="Search...">
+                        <button class="btn btn-secondary">Filter</button>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <p>This is where the main content of the page would go. It could be a table, a form, or detailed information.</p>
+                    
+                    <!-- Example Table -->
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#1001</td>
+                                <td>John Doe</td>
+                                <td><span class="badge-active">Active</span></td>
+                                <td>2023-10-25</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#1002</td>
+                                <td>Jane Smith</td>
+                                <td><span class="badge-pending">Pending</span></td>
+                                <td>2023-10-24</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+        </div>
+
+    </div>
+
+    <script>
+        // Load the page header partial
+        fetch('partials/page-header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('page-header-container').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading page header:', error));
+    </script>
+</body>
+</html>

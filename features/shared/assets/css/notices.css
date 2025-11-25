@@ -1,0 +1,27 @@
+/* Notices / Alerts */
+.notice {
+  background: rgba(6, 114, 156, 0.04);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: block;
+  border-left: 4px solid transparent;
+  transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.notice.error {
+  background: rgba(220, 38, 38, 0.06);
+  color: #7f1d1d;
+  border-left-color: #dc2626;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.05);
+}
+
+.notice.success {
+  background: rgba(16, 185, 129, 0.06);
+  color: #065f46;
+  border-left-color: #10b981;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.05);
+}

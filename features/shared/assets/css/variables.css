@@ -1,24 +1,33 @@
-/* CSS Variables */
+/* =========================================
+   CSS Variables - SulamProject Design System
+   ========================================= 
+   Islamic / Nature Green Palette
+   ========================================= */
 :root {
+  /* Core Colors - Islamic / Nature green palette */
   --bg: #ffffff; /* page background */
-  --card: #0b1220;
-  --accent: #4f46e5;
-  --muted: #64748b; /* slate-500 */
+  --card: #0a2e21; /* very dark green for panels */
+  --accent: #0f8a5f; /* primary accent (vibrant natural green) */
+  --accent-hover: #0d7550; /* darker green for hover state */
+  --muted: #4b7660; /* muted green/gray for secondary text */
   --btn-text: #ffffff;
-  --text-primary: #0f172a; /* slate-900 */
-  --border-subtle: rgba(0,0,0,0.08);
-  /* More contrasty green container background */
-  --card-bg: linear-gradient(180deg, rgba(22,163,74,0.18), rgba(6,95,70,0.22));
-  --card-border: rgba(22,163,74,0.28);
-  --shadow-sm: 0 8px 22px rgba(0,0,0,0.28);
-  --shadow-md: 0 10px 24px rgba(0,0,0,0.28);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,0.35);
+  --text-primary: #083f2f; /* deep green for main text */
+  --border-subtle: rgba(6,46,29,0.06);
+
+  /* Modern card background: toned-down soft green surface */
+  --card-bg: #eef6ec; /* softer, slightly darker warm green surface */
+  --card-border: rgba(6,95,70,0.08); /* subtle but clearer green border */
+
+  /* Shadows (neutral) */
+  --shadow-sm: 0 6px 18px rgba(0,0,0,0.12);
+  --shadow-md: 0 10px 24px rgba(0,0,0,0.16);
+  --shadow-lg: 0 14px 36px rgba(0,0,0,0.18);
 
   /* Sidebar theme */
-  --sidebar-bg: #0b1220; /* darker panel for better contrast */
-  --sidebar-border: rgba(255,255,255,0.08);
-  --sidebar-link: #cbd5e1;
-  --sidebar-link-hover-bg: rgba(255,255,255,0.06);
-  --sidebar-active-bg: rgba(79, 70, 229, 0.18); /* accent tint */
+  --sidebar-bg: #07291f; /* dark, forest-like panel */
+  --sidebar-border: rgba(255,255,255,0.03);
+  --sidebar-link: #dfeee6; /* light green-ish for links */
+  --sidebar-link-hover-bg: rgba(15,138,95,0.08);
+  --sidebar-active-bg: rgba(15,138,95,0.16); /* accent tint */
   --sidebar-active-text: #ffffff;
 }

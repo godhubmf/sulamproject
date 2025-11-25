@@ -1,8 +1,8 @@
 /* Aggregated stylesheet for pages outside the base layout */
 /* Pull in shared variables and base styles */
-@import url('/sulamproject/features/shared/assets/css/variables.css');
-@import url('/sulamproject/features/shared/assets/css/base.css');
+@import url('../../features/shared/assets/css/variables.css');
+@import url('../../features/shared/assets/css/base.css');
 
 /* Dashboard-specific styles */
-@import url('/sulamproject/features/dashboard/admin/assets/admin-dashboard.css');
-@import url('/sulamproject/features/dashboard/user/assets/user-dashboard.css');
+@import url('../../features/dashboard/admin/assets/admin-dashboard.css');
+@import url('../../features/dashboard/user/assets/user-dashboard.css');

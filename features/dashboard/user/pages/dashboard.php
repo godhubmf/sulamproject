@@ -1,58 +1,52 @@
 <?php
 // Moved from /dashboard.php
 $ROOT = dirname(__DIR__, 4);
+require_once $ROOT . '/features/shared/lib/utilities/functions.php';
 require_once $ROOT . '/features/shared/lib/auth/session.php';
 initSecureSession();
 requireAuth();
 $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'User';
-$stylePath = $ROOT . '/assets/css/style.css';
-$styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
+
+// Define page header
+$pageHeader = [
+    'title' => 'Dashboard',
+    'subtitle' => 'Welcome back, ' . $username . '.',
+    'breadcrumb' => [
+        ['label' => 'Home', 'url' => url('/')],
+        ['label' => 'Dashboard', 'url' => null],
+    ],
+];
+
+// 1. Capture the inner content
+ob_start();
 ?>
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard — SulamProject</title>
-  <link rel="stylesheet" href="/sulamproject/assets/css/style.css?v=<?php echo $styleVersion; ?>">
-  </head>
-  <body>
-    <div class="dashboard">
-  <?php $currentPage='dashboard.php'; include $ROOT . '/features/shared/components/sidebar.php'; ?>
+<div class="small-card" style="max-width:980px;margin:0 auto;padding:1.2rem 1.4rem;">
+  <section class="dashboard-cards">
+    <a class="dashboard-card" href="<?php echo url('residents'); ?>">
+      <i class="fa-solid fa-users icon" aria-hidden="true"></i>
+      <h3>Residents</h3>
+      <p>Manage residents and households.</p>
+    </a>
+    <a class="dashboard-card" href="<?php echo url('donations'); ?>">
+      <i class="fa-solid fa-coins icon" aria-hidden="true"></i>
+      <h3>Donations</h3>
+      <p>Track donations and receipts.</p>
+    </a>
+    <a class="dashboard-card" href="<?php echo url('events'); ?>">
+      <i class="fa-solid fa-calendar-days icon" aria-hidden="true"></i>
+      <h3>Events</h3>
+      <p>Plan and manage events.</p>
+    </a>
+  </section>
+</div>
+<?php 
+$content = ob_get_clean();
 
-      <main class="content">
-        <div class="small-card" style="max-width:980px;margin:0 auto;padding:1.2rem 1.4rem;">
-          <div class="dashboard-header">
-            <h2 style="margin:0">Welcome</h2>
-            <div>Hi, <strong><?php echo $username; ?></strong></div>
-          </div>
+// 2. Wrap into app-layout, which uses the sidebar
+ob_start();
+include $ROOT . '/features/shared/components/layouts/app-layout.php';
+$content = ob_get_clean();
 
-          <section class="dashboard-cards">
-            <a class="dashboard-card" href="/sulamproject/residents">
-              <span class="icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4 0-8 2-8 6v2h16v-2c0-4-4-6-8-6Z"/></svg>
-              </span>
-              <h3>Residents</h3>
-              <p>Manage residents and households.</p>
-            </a>
-            <a class="dashboard-card" href="/sulamproject/donations">
-              <span class="icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.1 4.3 4.7.7-3.4 3.3.8 4.7L12 14.8 7.8 17l.8-4.7L5.2 8l4.7-.7L12 3Zm-7 16h14v2H5v-2Z"/></svg>
-              </span>
-              <h3>Donations</h3>
-              <p>Track donations and receipts.</p>
-            </a>
-            <a class="dashboard-card" href="/sulamproject/events">
-              <span class="icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2Zm13 7H4v11h16V9Z"/></svg>
-              </span>
-              <h3>Events</h3>
-              <p>Plan and manage events.</p>
-            </a>
-          </section>
-        </div>
-      </main>
-    </div>
-      <?php include $ROOT . '/features/shared/components/footer.php'; ?>
-      </body>
-</html>
+// 3. Set page title and include base layout
+$pageTitle = 'Dashboard';
+include $ROOT . '/features/shared/components/layouts/base.php';

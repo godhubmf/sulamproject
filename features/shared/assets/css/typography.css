@@ -1,0 +1,23 @@
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+.small,
+small {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.lead {
+  color: var(--muted);
+  margin-top: -0.25rem;
+}
+
+/* Layout Helpers */
+.centered {
+  max-width: 520px;
+  margin: 8vh auto;
+  padding: 2.5rem;
+  text-align: center;
+}

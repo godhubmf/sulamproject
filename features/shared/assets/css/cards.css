@@ -1,0 +1,95 @@
+/* Cards */
+.small-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  padding: 1.25rem;
+}
+
+.page-card {
+  max-width: 960px;
+  margin: 6vh auto;
+  padding: 2rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Dashboard Cards */
+.dashboard-cards {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  max-width: 1000px;
+  margin: 2rem auto;
+}
+
+.dashboard-card {
+  display: block;
+  padding: 1.2rem;
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--text-primary);
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+  transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.34);
+  background: linear-gradient(180deg, rgba(22,163,74,0.14), rgba(6,95,70,0.14));
+}
+
+.dashboard-card h3 {
+  margin: 0.4rem 0 0.25rem;
+}
+
+.dashboard-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.dashboard-card .icon {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--border-subtle);
+  margin-bottom: 0.4rem;
+}
+
+/* Modern cards/grid for lists (donations/events) */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  padding: 1rem;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card img {
+  border-radius: 10px;
+  margin-bottom: 0.6rem;
+}
+
+.card small { 
+  color: var(--muted); 
+}

@@ -18,11 +18,11 @@ class DashboardController extends BaseController {
         $dashboardContent = ob_get_clean();
         
         ob_start();
-        include __DIR__ . '/../../../shared/components/layouts/dashboard-layout.php';
+        include __DIR__ . '/../../../shared/components/layouts/app-layout.php';
         $content = ob_get_clean();
         
         $pageTitle = 'Dashboard';
-        $additionalStyles = ['/features/dashboard/admin/assets/admin-dashboard.css'];
+        $additionalStyles = [url('features/dashboard/admin/assets/admin-dashboard.css')];
         include __DIR__ . '/../../../shared/components/layouts/base.php';
     }
     
@@ -36,11 +36,11 @@ class DashboardController extends BaseController {
         $dashboardContent = ob_get_clean();
         
         ob_start();
-        include __DIR__ . '/../../../shared/components/layouts/dashboard-layout.php';
+        include __DIR__ . '/../../../shared/components/layouts/app-layout.php';
         $content = ob_get_clean();
         
         $pageTitle = 'Dashboard';
-        $additionalStyles = ['/features/dashboard/user/assets/user-dashboard.css'];
+        $additionalStyles = [url('features/dashboard/user/assets/user-dashboard.css')];
         include __DIR__ . '/../../../shared/components/layouts/base.php';
     }
 }

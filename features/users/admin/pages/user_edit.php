@@ -15,15 +15,15 @@ $messageClass = 'notice';
 // Handle updates
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $roles = isset($_POST['roles']) ? trim($_POST['roles']) : 'user';
-  $no_telefon = isset($_POST['no_telefon']) ? trim($_POST['no_telefon']) : null;
-  $alamat = isset($_POST['alamat']) ? trim($_POST['alamat']) : null;
-  $status = isset($_POST['status_perkahwinan']) ? trim($_POST['status_perkahwinan']) : null;
-  $pendapatan = isset($_POST['pendapatan']) && $_POST['pendapatan'] !== '' ? $_POST['pendapatan'] : null;
-  $is_meninggal = isset($_POST['is_meninggal']) ? 1 : 0;
+  $phone_number = isset($_POST['phone_number']) ? trim($_POST['phone_number']) : null;
+  $address = isset($_POST['address']) ? trim($_POST['address']) : null;
+  $marital_status = isset($_POST['marital_status']) ? trim($_POST['marital_status']) : null;
+  $income = isset($_POST['income']) && $_POST['income'] !== '' ? $_POST['income'] : null;
+  $is_deceased = isset($_POST['is_deceased']) ? 1 : 0;
 
-  $stmt = $mysqli->prepare('UPDATE users SET roles=?, no_telefon=?, alamat=?, status_perkahwinan=?, pendapatan=?, is_meninggal=? WHERE id=?');
+  $stmt = $mysqli->prepare('UPDATE users SET roles=?, phone_number=?, address=?, marital_status=?, income=?, is_deceased=? WHERE id=?');
   if ($stmt) {
-    $stmt->bind_param('sssssii', $roles, $no_telefon, $alamat, $status, $pendapatan, $is_meninggal, $id);
+    $stmt->bind_param('sssssdi', $roles, $phone_number, $address, $marital_status, $income, $is_deceased, $id);
     if ($stmt->execute()) {
       $message = 'User updated successfully';
       $messageClass = 'notice success';
@@ -36,13 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   // Optional: create death record if provided
-  if ($is_meninggal && (isset($_POST['tarikh']) || isset($_POST['time']) || isset($_POST['tarikh_islam']))) {
-    $tarikh = isset($_POST['tarikh']) && $_POST['tarikh'] !== '' ? $_POST['tarikh'] : null;
+  if ($is_deceased && (isset($_POST['date']) || isset($_POST['time']) || isset($_POST['islamic_date']))) {
+    $date = isset($_POST['date']) && $_POST['date'] !== '' ? $_POST['date'] : null;
     $time = isset($_POST['time']) && $_POST['time'] !== '' ? $_POST['time'] : null;
-    $tarikh_islam = isset($_POST['tarikh_islam']) && $_POST['tarikh_islam'] !== '' ? $_POST['tarikh_islam'] : null;
-    $stmt2 = $mysqli->prepare('INSERT INTO deaths (user_id, time, tarikh, tarikh_islam) VALUES (?, ?, ?, ?)');
+    $islamic_date = isset($_POST['islamic_date']) && $_POST['islamic_date'] !== '' ? $_POST['islamic_date'] : null;
+    $stmt2 = $mysqli->prepare('INSERT INTO deaths (user_id, time, date, islamic_date) VALUES (?, ?, ?, ?)');
     if ($stmt2) {
-      $stmt2->bind_param('isss', $id, $time, $tarikh, $tarikh_islam);
+      $stmt2->bind_param('isss', $id, $time, $date, $islamic_date);
       $stmt2->execute();
       $stmt2->close();
     }
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Load user
-$stmt = $mysqli->prepare('SELECT id, name, username, email, roles, no_telefon, alamat, status_perkahwinan, pendapatan, is_meninggal FROM users WHERE id=? LIMIT 1');
+$stmt = $mysqli->prepare('SELECT id, name, username, email, roles, phone_number, address, marital_status, income, is_deceased FROM users WHERE id=? LIMIT 1');
 $stmt->bind_param('i', $id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -58,76 +58,71 @@ $user = $result ? $result->fetch_assoc() : null;
 $stmt->close();
 if (!$user) { http_response_code(404); echo 'User not found'; exit; }
 
-$stylePath = $ROOT . '/assets/css/style.css';
-$styleVersion = file_exists($stylePath) ? filemtime($stylePath) : time();
+// 1. Capture the inner content
+ob_start();
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Edit User #<?php echo (int)$user['id']; ?></title>
-  <link rel="stylesheet" href="/sulamproject/assets/css/style.css?v=<?php echo $styleVersion; ?>">
-</head>
-<body>
-  <div class="dashboard">
-  <?php $currentPage='user_edit.php'; include $ROOT . '/features/shared/components/sidebar.php'; ?>
-    <main class="content">
-      <div class="small-card" style="max-width:800px;margin:0 auto;">
-        <h2>Edit User: <?php echo htmlspecialchars($user['name']); ?></h2>
-        <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
+<div class="small-card" style="max-width:800px;margin:0 auto;">
+  <h2>Edit User: <?php echo htmlspecialchars($user['name']); ?></h2>
+  <?php if ($message): ?><div class="<?php echo $messageClass; ?>"><?php echo $message; ?></div><?php endif; ?>
 
-        <form method="post">
-          <label>Role
-            <select name="roles">
-              <option value="user" <?php echo $user['roles']==='user'?'selected':''; ?>>user</option>
-              <option value="admin" <?php echo $user['roles']==='admin'?'selected':''; ?>>admin</option>
-            </select>
-          </label>
-          <label>No Telefon
-            <input type="text" name="no_telefon" value="<?php echo htmlspecialchars((string)$user['no_telefon']); ?>">
-          </label>
-          <label>Alamat
-            <textarea name="alamat" rows="3"><?php echo htmlspecialchars((string)$user['alamat']); ?></textarea>
-          </label>
-          <label>Status Perkahwinan
-            <select name="status_perkahwinan">
-              <?php $opts=['','bujang','berkahwin','bercerai','duda','janda','lain-lain']; foreach($opts as $o): ?>
-                <option value="<?php echo $o; ?>" <?php echo ($user['status_perkahwinan']===$o? 'selected':'' ); ?>><?php echo $o===''?'(none)':$o; ?></option>
-              <?php endforeach; ?>
-            </select>
-          </label>
-          <label>Pendapatan (MYR)
-            <input type="number" step="0.01" name="pendapatan" value="<?php echo htmlspecialchars((string)$user['pendapatan']); ?>">
-          </label>
-          <label>
-            <input type="checkbox" name="is_meninggal" <?php echo $user['is_meninggal']? 'checked':''; ?>>
-            Deceased
-          </label>
+  <form method="post">
+    <label>Role
+      <select name="roles">
+        <option value="user" <?php echo $user['roles']==='user'?'selected':''; ?>>user</option>
+        <option value="admin" <?php echo $user['roles']==='admin'?'selected':''; ?>>admin</option>
+      </select>
+    </label>
+    <label>Phone Number
+      <input type="text" name="phone_number" value="<?php echo htmlspecialchars((string)$user['phone_number']); ?>">
+    </label>
+    <label>Address
+      <textarea name="address" rows="3"><?php echo htmlspecialchars((string)$user['address']); ?></textarea>
+    </label>
+    <label>Marital Status
+      <select name="marital_status">
+        <?php $opts=['','single','married','divorced','widowed','others']; foreach($opts as $o): ?>
+          <option value="<?php echo $o; ?>" <?php echo ($user['marital_status']===$o? 'selected':'' ); ?>><?php echo $o===''?'(none)':ucfirst($o); ?></option>
+        <?php endforeach; ?>
+      </select>
+    </label>
+    <label>Income (MYR)
+      <input type="number" step="0.01" name="income" value="<?php echo htmlspecialchars((string)$user['income']); ?>">
+    </label>
+    <label>
+      <input type="checkbox" name="is_deceased" <?php echo $user['is_deceased']? 'checked':''; ?>>
+      Deceased
+    </label>
 
-          <fieldset>
-            <legend>Death Record (optional)</legend>
-            <div class="grid-3">
-              <label>Tarikh (Date)
-                <input type="date" name="tarikh">
-              </label>
-              <label>Time
-                <input type="time" name="time">
-              </label>
-              <label>Tarikh Islam
-                <input type="text" name="tarikh_islam" placeholder="e.g., 10 Rabiulawal 1447H">
-              </label>
-            </div>
-          </fieldset>
-
-          <div class="actions">
-            <button class="btn" type="submit">Save</button>
-            <a class="btn outline" href="/sulamproject/admin">Back</a>
-          </div>
-        </form>
+    <fieldset>
+      <legend>Death Record (optional)</legend>
+      <div class="grid-3">
+        <label>Date
+          <input type="date" name="date">
+        </label>
+        <label>Time
+          <input type="time" name="time">
+        </label>
+        <label>Islamic Date
+          <input type="text" name="islamic_date" placeholder="e.g., 10 Rabiulawal 1447H">
+        </label>
       </div>
-    </main>
-  </div>
-<?php include $ROOT . '/features/shared/components/footer.php'; ?>
-</body>
-</html>
+    </fieldset>
+
+    <div class="actions">
+      <button class="btn" type="submit">Save</button>
+      <a class="btn outline" href="<?php echo url('admin'); ?>">Back</a>
+    </div>
+  </form>
+</div>
+<?php
+$content = ob_get_clean();
+
+// 2. Wrap with dashboard layout
+ob_start();
+include $ROOT . '/features/shared/components/layouts/app-layout.php';
+$content = ob_get_clean();
+
+// 3. Render with base layout
+$pageTitle = 'Edit User #' . $user['id'];
+include $ROOT . '/features/shared/components/layouts/base.php';
+?>

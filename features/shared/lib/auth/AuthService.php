@@ -16,16 +16,16 @@ class AuthService {
     
     public function login($username, $password) {
         $user = $this->db->fetchOne(
-            "SELECT id, username, email, password_hash, role FROM users WHERE username = ? OR email = ?",
+            "SELECT id, username, email, password, roles FROM users WHERE username = ? OR email = ?",
             [$username, $username]
         );
         
-        if ($user && password_verify($password, $user['password_hash'])) {
+        if ($user && password_verify($password, $user['password'])) {
             session_regenerate_id(true);
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['email'] = $user['email'];
-            $_SESSION['role'] = $user['role'] ?? 'user';
+            $_SESSION['role'] = $user['roles'] ?? 'user';
             $_SESSION['last_regeneration'] = time();
             
             return [
@@ -33,7 +33,7 @@ class AuthService {
                 'user' => [
                     'id' => $user['id'],
                     'username' => $user['username'],
-                    'role' => $user['role'] ?? 'user'
+                    'role' => $user['roles'] ?? 'user'
                 ]
             ];
         }
@@ -41,7 +41,7 @@ class AuthService {
         return ['success' => false, 'message' => 'Invalid credentials'];
     }
     
-    public function register($username, $email, $password, $role = 'user') {
+    public function register($name, $username, $email, $password, $role = 'user') {
         // Check if username or email already exists
         $existing = $this->db->fetchOne(
             "SELECT id FROM users WHERE username = ? OR email = ?",
@@ -56,8 +56,8 @@ class AuthService {
         
         try {
             $this->db->execute(
-                "INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, ?)",
-                [$username, $email, $hashedPassword, $role]
+                "INSERT INTO users (name, username, email, password, roles) VALUES (?, ?, ?, ?, ?)",
+                [$name, $username, $email, $hashedPassword, $role]
             );
             
             return [
@@ -66,7 +66,7 @@ class AuthService {
                 'message' => 'Registration successful'
             ];
         } catch (Exception $e) {
-            return ['success' => false, 'message' => 'Registration failed'];
+            return ['success' => false, 'message' => 'Registration failed: ' . $e->getMessage()];
         }
     }
     
@@ -81,7 +81,7 @@ class AuthService {
         }
         
         return $this->db->fetchOne(
-            "SELECT id, username, email, role, created_at FROM users WHERE id = ?",
+            "SELECT id, username, email, roles, created_at FROM users WHERE id = ?",
             [getUserId()]
         );
     }
