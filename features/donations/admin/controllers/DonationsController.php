@@ -32,20 +32,49 @@ class DonationsController {
                 $gamba = trim($_POST['gamba_url']);
             }
             
-            if ($title === '') { 
-                $message = 'Title is required.'; 
+            // Determine which columns exist in the donations table and build INSERT accordingly
+            $existingCols = [];
+            $colRes = $this->mysqli->query("SHOW COLUMNS FROM donations");
+            if ($colRes) {
+                while ($c = $colRes->fetch_assoc()) { $existingCols[] = $c['Field']; }
+                $colRes->close();
+            }
+
+            // If title column exists, require title
+            if (in_array('title', $existingCols) && $title === '') {
+                $message = 'Title is required.';
                 $messageClass = 'notice error';
             } else {
-                $stmt = $this->mysqli->prepare('INSERT INTO donations (title, description, image_path, is_active) VALUES (?, ?, ?, ?)');
-                if ($stmt) { 
-                    $stmt->bind_param('sssi', $title, $desc, $gamba, $isActive); 
-                    $stmt->execute(); 
-                    $stmt->close(); 
-                    $message = 'Donation post created'; 
-                    $messageClass = 'notice success'; 
-                } else {
-                    $message = 'Database error: ' . $this->mysqli->error;
+                $insertCols = [];
+                $placeholders = [];
+                $types = '';
+                $values = [];
+
+                if (in_array('title', $existingCols)) { $insertCols[] = 'title'; $placeholders[] = '?'; $types .= 's'; $values[] = $title; }
+                if (in_array('description', $existingCols)) { $insertCols[] = 'description'; $placeholders[] = '?'; $types .= 's'; $values[] = $desc; }
+                if (in_array('image_path', $existingCols)) { $insertCols[] = 'image_path'; $placeholders[] = '?'; $types .= 's'; $values[] = $gamba; }
+                if (in_array('is_active', $existingCols)) { $insertCols[] = 'is_active'; $placeholders[] = '?'; $types .= 'i'; $values[] = $isActive; }
+
+                if (empty($insertCols)) {
+                    $message = 'No writable columns found in donations table.';
                     $messageClass = 'notice error';
+                } else {
+                    $sql = 'INSERT INTO donations (' . implode(', ', $insertCols) . ') VALUES (' . implode(', ', $placeholders) . ')';
+                    $stmt = $this->mysqli->prepare($sql);
+                    if ($stmt) {
+                        // bind_param requires references
+                        $bindParams = [];
+                        $bindParams[] = & $types;
+                        for ($i = 0; $i < count($values); $i++) { $bindParams[] = & $values[$i]; }
+                        call_user_func_array([$stmt, 'bind_param'], $bindParams);
+                        $stmt->execute();
+                        $stmt->close();
+                        $message = 'Donation post created';
+                        $messageClass = 'notice success';
+                    } else {
+                        $message = 'Database error: ' . $this->mysqli->error;
+                        $messageClass = 'notice error';
+                    }
                 }
             }
         }
@@ -55,12 +84,28 @@ class DonationsController {
 
     public function getAllDonations() {
         $items = [];
-        $res = $this->mysqli->query('SELECT id, title, description, image_path, is_active, created_at FROM donations ORDER BY id DESC');
-        if ($res) { 
-            while ($row = $res->fetch_assoc()) { 
-                $items[] = $row; 
-            } 
-            $res->close(); 
+        // Build SELECT dynamically based on existing columns to avoid SQL errors
+        $existingCols = [];
+        $colRes = $this->mysqli->query("SHOW COLUMNS FROM donations");
+        if ($colRes) {
+            while ($c = $colRes->fetch_assoc()) { $existingCols[] = $c['Field']; }
+            $colRes->close();
+        }
+
+        // Default set of columns we want to display (if present)
+        $desired = ['id', 'title', 'description', 'image_path', 'is_active', 'created_at'];
+        $selectCols = [];
+        foreach ($desired as $c) { if (in_array($c, $existingCols)) { $selectCols[] = $c; } }
+
+        if (empty($selectCols)) {
+            return $items;
+        }
+
+        $sql = 'SELECT ' . implode(', ', $selectCols) . ' FROM donations ORDER BY id DESC';
+        $res = $this->mysqli->query($sql);
+        if ($res) {
+            while ($row = $res->fetch_assoc()) { $items[] = $row; }
+            $res->close();
         }
         return $items;
     }
