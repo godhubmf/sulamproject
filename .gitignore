@@ -47,4 +47,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-audit.log
+storage/logs/audit.log

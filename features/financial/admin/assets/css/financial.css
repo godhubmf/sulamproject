@@ -59,6 +59,38 @@
 }
 
 
+/* Filter Card Styling */
+.card--filter {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e5e7eb;
+}
+
+.card--filter .form-control {
+  border-radius: 8px;
+  border-color: #d1d5db;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.card--filter .form-control:focus {
+  border-color: #10b981; /* Green accent */
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.card--filter label {
+  color: #374151;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.card--filter .btn {
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+}
 
 /* Sticky Column Utility */
 .sticky-col-left {

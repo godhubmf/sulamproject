@@ -44,55 +44,111 @@ class FinancialController {
      * Display the Cash Book (Buku Tunai)
      * @param int|null $fiscalYear Optional fiscal year filter (defaults to current year)
      */
-    public function cashBook(?int $fiscalYear = null): array {
+    public function cashBook(?int $fiscalYear = null, ?int $month = null): array {
         $fiscalYear = $fiscalYear ?? (int)date('Y');
+        // Default to current month if not specified, or allow '0' or null for "All" ? 
+        // Let's assume if month is null, we show all (or user can select 'All'). 
+        // But for better UX per user request "one month will have one cash book", maybe default to current month if not provided is safer, 
+        // but let's stick to optional so 'All' is possible.
         
-        // Get opening balances from financial_settings
+        // Get opening balances for the year from financial_settings
         $settings = $this->settingsRepo->getByFiscalYear($fiscalYear);
         $openingCash = (float)($settings['opening_cash_balance'] ?? 0);
         $openingBank = (float)($settings['opening_bank_balance'] ?? 0);
         
         $transactions = $this->getCashBookData($fiscalYear);
         
-        // Start with opening balances
+        // Start with year opening balances
         $tunaiBalance = $openingCash;
         $bankBalance = $openingBank;
         
-        // We need to process from oldest to newest to calculate running balance correctly
-        // The query returns oldest first (ASC)
+        // Variables to hold the opening balance specific to the selected month
+        $monthOpeningCash = $openingCash;
+        $monthOpeningBank = $openingBank;
+        
+        $filteredTransactions = [];
+
+        // Processing loop
         foreach ($transactions as &$tx) {
+            $txDate = strtotime($tx['tx_date']);
+            $txMonth = (int)date('m', $txDate);
             $amount = (float)$tx['amount'];
             
+            // If we are filtering by month, and this transaction is BEFORE the requested month,
+            // we apply it to the "month opening balance" but don't add it to the display list.
+            $isBeforeSelectedMonth = ($month && $txMonth < $month);
+            
+            // Check if transaction is in the selected month (or if no month selected)
+            $isInSelectedRange = (!$month || $txMonth === $month);
+
             if ($tx['type'] === 'IN') {
                 if ($tx['payment_method'] === 'cash') {
                     $tunaiBalance += $amount;
+                    if ($isBeforeSelectedMonth) $monthOpeningCash += $amount;
                 } else {
                     $bankBalance += $amount;
+                    if ($isBeforeSelectedMonth) $monthOpeningBank += $amount;
                 }
             } else { // OUT
                 if ($tx['payment_method'] === 'cash') {
                     $tunaiBalance -= $amount;
+                    if ($isBeforeSelectedMonth) $monthOpeningCash -= $amount;
                 } else {
                     $bankBalance -= $amount;
+                    if ($isBeforeSelectedMonth) $monthOpeningBank -= $amount;
                 }
             }
             
             $tx['tunai_balance'] = $tunaiBalance;
             $tx['bank_balance'] = $bankBalance;
-        }
-        unset($tx); // Break reference
 
-        // For display, we might want newest first, but standard cash book is usually chronological.
-        // Let's keep it chronological (Oldest -> Newest) as per standard accounting.
+            if ($isInSelectedRange) {
+                $filteredTransactions[] = $tx;
+            }
+        }
+        unset($tx);
+
+        // If a month was selected, override the returned opening balances with the calculated ones
+        if ($month) {
+            $openingCash = $monthOpeningCash;
+            $openingBank = $monthOpeningBank;
+        }
 
         return [
             'title' => 'Buku Tunai',
-            'transactions' => $transactions,
-            'tunaiBalance' => $tunaiBalance,
-            'bankBalance' => $bankBalance,
+            'transactions' => $filteredTransactions,
+            'tunaiBalance' => $tunaiBalance, // Current closing balance (year-to-date or month-end depending on view?) - Usually existing cards show current state. Let's keep year-end or current total? 
+            // Actually, if filtering by month, user might expect the balance cards to show the balance AT THE END OF THAT MONTH.
+            // But the current logic ($tunaiBalance) holds the cumulative balance after iterating ALL transactions (if we iterated all to get running totals).
+            // Wait, if I iterate all, $tunaiBalance is the FINAL balance of the year (or up to now).
+            // If I view "January", I probably want to see the balance at end of January in the table.
+            // The stat cards usually show "Current Balance" (Live).
+            // Let's return the final calculated balance of the *filtered* set? 
+            // No, the table footer should show the balance at the end of the view.
+            
+            // Let's refine: The loop goes through ALL transactions sorted by date.
+            // If we stop displaying at month X, we still continue calculating to get the YTD total?
+            // Yes, user might want to see YTD status in top cards, but month details in table.
+            
+            // However, the table footer uses $tunaiBalance. 
+            // If I view January, the table footer should show Jan closing balance.
+            // My loop above processes ALL transactions.
+            // So $tunaiBalance at end of loop is DEC 31 (or latest).
+            // If I want Month End balance, I should capture it.
+            
+            // Correction:
+            // If I filter by Month, the "Running Balance" column in the table will show the correct running balance at that point in time.
+            // The table footer typically shows the value of the last row.
+            
+            // Let's update the return to differentiate "Current System Balance" vs "View Closing Balance".
+            
+            'currentCashBalance' => $tunaiBalance, 
+            'currentBankBalance' => $bankBalance,
+            
             'openingCash' => $openingCash,
             'openingBank' => $openingBank,
             'fiscalYear' => $fiscalYear,
+            'month' => $month,
             'hasSettings' => $settings !== null,
         ];
     }
@@ -153,11 +209,25 @@ class FinancialController {
      */
     public function paymentAccount(): array {
         $payments = $this->paymentRepo->findAll();
+        
+        $totalCash = 0;
+        $totalBank = 0;
+        foreach ($payments as $row) {
+            $amount = $this->paymentRepo->calculateRowTotal($row);
+            if (($row['payment_method'] ?? 'cash') === 'cash') {
+                $totalCash += $amount;
+            } else {
+                $totalBank += $amount;
+            }
+        }
+
         return [
             'title' => 'Akaun Bayaran',
             'payments' => $payments,
             'categoryColumns' => PaymentAccountRepository::CATEGORY_COLUMNS,
             'categoryLabels' => PaymentAccountRepository::CATEGORY_LABELS,
+            'totalCash' => $totalCash,
+            'totalBank' => $totalBank,
         ];
     }
 
@@ -299,11 +369,25 @@ class FinancialController {
      */
     public function depositAccount(): array {
         $deposits = $this->depositRepo->findAll();
+        
+        $totalCash = 0;
+        $totalBank = 0;
+        foreach ($deposits as $row) {
+            $amount = $this->depositRepo->calculateRowTotal($row);
+            if (($row['payment_method'] ?? 'cash') === 'cash') {
+                $totalCash += $amount;
+            } else {
+                $totalBank += $amount;
+            }
+        }
+
         return [
             'title' => 'Akaun Terimaan',
             'deposits' => $deposits,
             'categoryColumns' => DepositAccountRepository::CATEGORY_COLUMNS,
             'categoryLabels' => DepositAccountRepository::CATEGORY_LABELS,
+            'totalCash' => $totalCash,
+            'totalBank' => $totalBank,
         ];
     }
 

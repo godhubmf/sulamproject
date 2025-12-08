@@ -12,7 +12,20 @@ requireAdmin(); // Assuming only admins/treasurers access this
 
 // Instantiate Controller
 $controller = new FinancialController($mysqli);
-$data = $controller->cashBook();
+
+// Get filters (default to current year and month)
+$year = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
+// Default month to current month. If 'all' is passed (empty string or 0), we show all.
+// Allowing 'month' to be empty/null means "All".
+// If $_GET['month'] is not set, default to current month.
+// If $_GET['month'] IS set (even empty), respect it.
+if (isset($_GET['month'])) {
+    $month = $_GET['month'] === '' || $_GET['month'] === 'all' ? null : (int)$_GET['month'];
+} else {
+    $month = (int)date('m');
+}
+
+$data = $controller->cashBook($year, $month);
 
 extract($data);
 

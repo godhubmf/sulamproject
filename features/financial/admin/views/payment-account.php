@@ -15,6 +15,23 @@ function formatAmount($value) {
 
 <div class="content-container">
     <!-- Payment Account Table -->
+    
+    <!-- Balance Summary Stat Cards -->
+    <div class="stat-cards">
+        <div class="stat-card stat-card--cash">
+            <div class="stat-card__label">Jum. Bayaran Tunai (Total Cash)</div>
+            <div class="stat-card__value">RM <?php echo number_format($totalCash, 2); ?></div>
+        </div>
+        <div class="stat-card stat-card--bank">
+            <div class="stat-card__label">Jum. Bayaran Bank (Total Bank)</div>
+            <div class="stat-card__value">RM <?php echo number_format($totalBank, 2); ?></div>
+        </div>
+        <div class="stat-card stat-card--total">
+            <div class="stat-card__label">Jumlah Keseluruhan (Grand Total)</div>
+            <div class="stat-card__value">RM <?php echo number_format($totalCash + $totalBank, 2); ?></div>
+        </div>
+    </div>
+
     <?php if (empty($payments)): ?>
         <div class="notice" style="text-align: center; padding: 3rem;">
             <i class="fas fa-coins" style="font-size: 3rem; color: var(--muted); margin-bottom: 1rem;"></i>
@@ -28,6 +45,7 @@ function formatAmount($value) {
                         <th>Tarikh</th>
                         <th>No. Baucar</th>
                         <th class="sticky-col-left">Butiran</th>
+                        <th>Kaedah Pembayaran</th>
                         <?php foreach ($categoryLabels as $col => $label): ?>
                             <th><?php echo htmlspecialchars($label); ?></th>
                         <?php endforeach; ?>
@@ -47,6 +65,11 @@ function formatAmount($value) {
                             <?php endif; ?>
                         </td>
                         <td class="sticky-col-left"><?php echo htmlspecialchars($row['description']); ?></td>
+                        <td>
+                            <span class="badge badge-light border">
+                                <?php echo htmlspecialchars(ucfirst($row['payment_method'] ?? 'cash')); ?>
+                            </span>
+                        </td>
                         <?php 
                         $rowTotal = 0;
                         foreach ($categoryColumns as $col): 

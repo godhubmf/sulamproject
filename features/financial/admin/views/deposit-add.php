@@ -62,17 +62,16 @@ $formData = $isEdit ? $record : ($old ?? []);
                     <option value="">-- Select Method --</option>
                     <option value="cash" <?php echo ($formData['payment_method'] ?? '') === 'cash' ? 'selected' : ''; ?>>Tunai (Cash)</option>
                     <option value="bank" <?php echo ($formData['payment_method'] ?? '') === 'bank' ? 'selected' : ''; ?>>Bank Transfer</option>
-                    <option value="cheque" <?php echo ($formData['payment_method'] ?? '') === 'cheque' ? 'selected' : ''; ?>>Cheque</option>
                 </select>
             </div>
 
             <!-- Payment Reference -->
             <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="payment_reference">No. Transaksi / Cek (Transaction/Cheque Number)</label>
+                <label for="payment_reference">No. Transaksi (Transaction Number)</label>
                 <input type="text" id="payment_reference" name="payment_reference" class="form-control" 
-                       placeholder="e.g. TRX123456 or Cheque No."
+                       placeholder="e.g. TRX123456"
                        value="<?php echo htmlspecialchars($formData['payment_reference'] ?? ''); ?>">
-                <small class="form-text text-muted">Required if payment method is Bank or Cheque.</small>
+                <small class="form-text text-muted">Required if payment method is Bank.</small>
             </div>
 
             <!-- Category Amounts -->

@@ -6,6 +6,48 @@
 ?>
 
 <div class="content-container">
+    <!-- Filter Form -->
+    <div class="card card--filter mb-4 border-0">
+        <div class="card-body py-4 px-4">
+            <form method="GET" class="form-inline align-items-center">
+                <div class="form-group mb-0 mr-4">
+                    <label class="mr-2 text-muted text-uppercase small" style="font-size: 0.75rem;">Tahun</label>
+                    <select name="year" class="form-control custom-select shadow-sm" style="min-width: 120px;" onchange="this.form.submit()">
+                        <?php 
+                        $currentYear = date('Y');
+                        for ($y = $currentYear - 2; $y <= $currentYear + 1; $y++) {
+                            $selected = ($y == $fiscalYear) ? 'selected' : '';
+                            echo "<option value='$y' $selected>$y</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <div class="form-group mb-0 mr-4">
+                    <label class="mr-2 text-muted text-uppercase small" style="font-size: 0.75rem;">Bulan</label>
+                    <select name="month" class="form-control custom-select shadow-sm" style="min-width: 200px;" onchange="this.form.submit()">
+                        <option value="all" <?php echo ($month === null) ? 'selected' : ''; ?>>Keseluruhan Tahun</option>
+                        <?php
+                        $months = [
+                            1 => 'Januari', 2 => 'Februari', 3 => 'Mac', 4 => 'April',
+                            5 => 'Mei', 6 => 'Jun', 7 => 'Julai', 8 => 'Ogos',
+                            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Disember'
+                        ];
+                        foreach ($months as $num => $name) {
+                            $selected = ($month === $num) ? 'selected' : '';
+                            echo "<option value='$num' $selected>$num - $name</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary shadow-sm px-4">
+                    <i class="fas fa-filter mr-2"></i> Tapis
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Opening Balance Alert (if not configured) -->
     <?php if (!$hasSettings): ?>
     <div class="alert alert-warning d-flex align-items-center mb-3">
@@ -18,22 +60,35 @@
     </div>
     <?php endif; ?>
 
+    <?php
+    // Calculate display balances based on filtered view
+    $displayCash = $openingCash;
+    $displayBank = $openingBank;
+    
+    if (!empty($transactions)) {
+        //If transactions exist, the last row represents the closing balance for this view period
+        $lastTx = end($transactions);
+        $displayCash = $lastTx['tunai_balance'];
+        $displayBank = $lastTx['bank_balance'];
+    }
+    ?>
+
     <!-- Balance Summary Stat Cards -->
     <div class="stat-cards">
         <div class="stat-card stat-card--cash">
-            <div class="stat-card__label">Baki Tunai (Cash Balance)</div>
-            <div class="stat-card__value">RM <?php echo number_format($tunaiBalance, 2); ?></div>
+            <div class="stat-card__label">Baki Tunai <?php echo $month ? "($months[$month])" : "(Tahun $fiscalYear)"; ?></div>
+            <div class="stat-card__value">RM <?php echo number_format($displayCash, 2); ?></div>
             <div class="stat-card__meta">Baki Awal: RM <?php echo number_format($openingCash, 2); ?></div>
         </div>
         <div class="stat-card stat-card--bank">
-            <div class="stat-card__label">Baki Bank (Bank Balance)</div>
-            <div class="stat-card__value">RM <?php echo number_format($bankBalance, 2); ?></div>
+            <div class="stat-card__label">Baki Bank <?php echo $month ? "($months[$month])" : "(Tahun $fiscalYear)"; ?></div>
+            <div class="stat-card__value">RM <?php echo number_format($displayBank, 2); ?></div>
             <div class="stat-card__meta">Baki Awal: RM <?php echo number_format($openingBank, 2); ?></div>
         </div>
         <div class="stat-card stat-card--total">
             <div class="stat-card__label">Jumlah Baki (Total Balance)</div>
-            <div class="stat-card__value">RM <?php echo number_format($tunaiBalance + $bankBalance, 2); ?></div>
-            <div class="stat-card__meta">Tahun Kewangan: <?php echo $fiscalYear; ?></div>
+            <div class="stat-card__value">RM <?php echo number_format($displayCash + $displayBank, 2); ?></div>
+            <div class="stat-card__meta">Tempoh: <?php echo $month ? "$months[$month] $fiscalYear" : $fiscalYear; ?></div>
         </div>
     </div>
 
@@ -48,7 +103,7 @@
                         <th colspan="2" class="text-center">Tunai (Cash)</th>
                         <th colspan="2" class="text-center">Bank</th>
                         <th colspan="2" class="text-center">Baki (Balance)</th>
-                        <th rowspan="2" class="align-middle table__cell--actions" style="width: 50px;">Aksi</th>
+                        <th rowspan="2" class="align-middle table__cell--actions" style="width: 50px;">Tindakan</th>
                     </tr>
                     <tr>
                         <th class="text-center text-success" style="width: 100px;">Masuk (In)</th>
@@ -62,7 +117,14 @@
                 <tbody>
                     <!-- Opening Balance Row -->
                     <tr class="table-secondary font-weight-bold">
-                        <td class="text-center">01/01/<?php echo $fiscalYear; ?></td>
+                        <td class="text-center">
+                            <?php 
+                            // Determine opening date
+                            $openDay = '01';
+                            $openMonth = $month ? str_pad($month, 2, '0', STR_PAD_LEFT) : '01';
+                            echo "$openDay/$openMonth/$fiscalYear";
+                            ?>
+                        </td>
                         <td class="text-center"><span class="badge badge-secondary">BAKI AWAL</span></td>
                         <td>Baki Bawa Ke Hadapan (Opening Balance)</td>
                         <td class="table__cell--numeric">-</td>
@@ -154,13 +216,13 @@
                     <tr>
                         <td colspan="3" class="text-right">Baki Semasa (Current Balance):</td>
                         <td colspan="2" class="text-center text-primary">
-                            RM <?php echo number_format($tunaiBalance, 2); ?>
+                            RM <?php echo number_format($displayCash, 2); ?>
                         </td>
                         <td colspan="2" class="text-center text-primary">
-                            RM <?php echo number_format($bankBalance, 2); ?>
+                            RM <?php echo number_format($displayBank, 2); ?>
                         </td>
                         <td colspan="3" class="text-center">
-                            <strong>Jumlah: RM <?php echo number_format($tunaiBalance + $bankBalance, 2); ?></strong>
+                            <strong>Jumlah: RM <?php echo number_format($displayCash + $displayBank, 2); ?></strong>
                         </td>
                     </tr>
                 </tfoot>
