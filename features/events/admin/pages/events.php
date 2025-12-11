@@ -3,6 +3,7 @@
 $ROOT = dirname(__DIR__, 4);
 require_once $ROOT . '/features/shared/lib/auth/session.php';
 require_once $ROOT . '/features/shared/lib/database/mysqli-db.php';
+require_once $ROOT . '/features/shared/lib/utilities/functions.php';
 initSecureSession();
 requireAuth();
 $isAdmin = isAdmin();
@@ -45,11 +46,10 @@ $pageHeader = [
     ]
 ];
 
-// 1. Capture the inner content
+// 1. Capture the Split Content
+/* --- LEFT COLUMN: Message & Create Form --- */
 ob_start();
 ?>
-<div class="events-page">
-
   <?php if ($message): ?>
     <div class="<?php echo $messageClass; ?>" style="margin-bottom: 1rem; padding: 1rem; border-radius: 8px; background: <?php echo strpos($messageClass, 'success') !== false ? '#d1fae5' : '#fee2e2'; ?>; color: <?php echo strpos($messageClass, 'success') !== false ? '#065f46' : '#991b1b'; ?>;">
         <?php echo $message; ?>
@@ -115,8 +115,13 @@ ob_start();
     </form>
   </div>
   <?php endif; ?>
+<?php
+$splitLayoutLeft = ob_get_clean();
 
-  <div class="section-header" style="margin-top: 1rem;">
+/* --- RIGHT COLUMN: Existing Events List --- */
+ob_start();
+?>
+  <div class="section-header" style="margin-top: 0;">
     <h3 class="section-title">Existing Events</h3>
   </div>
 
@@ -125,7 +130,7 @@ ob_start();
         <p>No events have been created yet.</p>
     </div>
   <?php else: ?>
-        <div class="events-grid">
+        <div class="events-grid" style="grid-template-columns: 1fr;"> <!-- Force single column in split view -->
       <?php foreach ($events as $e): ?>
         <div class="event-card">
           <div class="event-image-container">
@@ -241,18 +246,23 @@ ob_start();
       <?php endforeach; ?>
     </div>
   <?php endif; ?>
-</div>
 <?php
+$splitLayoutRight = ob_get_clean();
+
+// 2. Wrap with split layout
+ob_start();
+include $ROOT . '/features/shared/components/layouts/split-content-layout.php';
 $content = ob_get_clean();
 
-// 2. Wrap with dashboard layout
+// 3. Wrap with dashboard layout
 ob_start();
 include $ROOT . '/features/shared/components/layouts/app-layout.php';
 $content = ob_get_clean();
 
-// 3. Render with base layout
+// 4. Render with base layout
 $pageTitle = 'Events';
 $additionalStyles = [
+    url('features/shared/assets/css/split-content-layout.css'),
     url('features/events/admin/assets/events-admin.css')
 ];
 include $ROOT . '/features/shared/components/layouts/base.php';

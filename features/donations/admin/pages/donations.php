@@ -3,6 +3,7 @@
 $ROOT = dirname(__DIR__, 4);
 require_once $ROOT . '/features/shared/lib/auth/session.php';
 require_once $ROOT . '/features/shared/lib/database/mysqli-db.php';
+require_once $ROOT . '/features/shared/lib/utilities/functions.php';
 initSecureSession();
 requireAuth();
 $isAdmin = isAdmin();
@@ -15,7 +16,16 @@ $message = '';
 $messageClass = '';
 
 if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $result = $controller->handleCreate();
+    $action = $_POST['action'] ?? 'create';
+    if ($action === 'create') {
+        $result = $controller->handleCreate();
+    } elseif ($action === 'update' && isset($_POST['id'])) {
+        $result = $controller->handleUpdate((int)$_POST['id']);
+    } elseif ($action === 'delete' && isset($_POST['id'])) {
+        $result = $controller->handleDelete((int)$_POST['id']);
+    } else {
+        $result = ['message' => 'Invalid action.', 'messageClass' => 'notice error'];
+    }
     $message = $result['message'];
     $messageClass = $result['messageClass'];
 }
@@ -36,11 +46,10 @@ $pageHeader = [
     ]
 ];
 
-// 1. Capture the inner content
+// 1. Capture the Split Content
+/* --- LEFT COLUMN: Message & Create Form --- */
 ob_start();
 ?>
-<div class="donations-page">
-
   <?php if ($message): ?>
     <div class="<?php echo $messageClass; ?>" style="margin-bottom: 1rem; padding: 1rem; border-radius: 8px; background: <?php echo strpos($messageClass, 'success') !== false ? '#d1fae5' : '#fee2e2'; ?>; color: <?php echo strpos($messageClass, 'success') !== false ? '#065f46' : '#991b1b'; ?>;">
         <?php echo $message; ?>
@@ -51,7 +60,7 @@ ob_start();
   <div class="card create-card">
     <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem; color: #374151;">Create New Donation Cause</h3>
     <form method="post" enctype="multipart/form-data">
-      
+      <input type="hidden" name="action" value="create">
       <div class="form-grid">
         <div class="form-group">
             <label class="form-label">Title</label>
@@ -91,8 +100,13 @@ ob_start();
     </form>
   </div>
   <?php endif; ?>
+<?php
+$splitLayoutLeft = ob_get_clean();
 
-  <div class="section-header" style="margin-top: 1rem;">
+/* --- RIGHT COLUMN: Existing Donations List --- */
+ob_start();
+?>
+  <div class="section-header" style="margin-top: 0;">
     <h3 class="section-title">Existing Donations</h3>
   </div>
 
@@ -101,7 +115,7 @@ ob_start();
         <p>No donation causes have been created yet.</p>
     </div>
   <?php else: ?>
-    <div class="donations-grid">
+    <div class="donations-grid" style="grid-template-columns: 1fr;"> <!-- Force single column in split view -->
       <?php foreach ($items as $d): ?>
         <div class="card donation-card">
           <div class="donation-image-container">
@@ -133,24 +147,83 @@ ob_start();
             <div class="donation-meta">
                 Created: <?php echo date('M j, Y', strtotime($d['created_at'])); ?>
             </div>
+
+            <?php if ($isAdmin): ?>
+            <div class="donation-actions" style="margin-top: .75rem; display:flex; gap:.5rem;">
+                <button class="btn-secondary" type="button" onclick="toggleEditForm(<?php echo (int)$d['id']; ?>)">Edit</button>
+                <form method="post" onsubmit="return confirm('Delete this donation cause?');">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>">
+                    <button class="btn-secondary" type="submit">Delete</button>
+                </form>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" id="edit-form-<?php echo (int)$d['id']; ?>" style="display:none; margin-top: .75rem;">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="id" value="<?php echo (int)$d['id']; ?>">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" name="title" class="form-input" value="<?php echo htmlspecialchars($d['title']); ?>" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-textarea"><?php echo htmlspecialchars($d['description'] ?? ''); ?></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Replace QR Code</label>
+                        <input type="file" name="gamba" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Or Image URL</label>
+                        <input type="url" name="gamba_url" class="form-input" placeholder="https://...">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label">Status</label>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" name="is_active" value="1" id="isActive-<?php echo (int)$d['id']; ?>" <?php echo $d['is_active'] ? 'checked' : ''; ?>>
+                            <label for="isActive-<?php echo (int)$d['id']; ?>">Active</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="actions" style="text-align:right;">
+                    <button class="btn-primary" type="submit">Save Changes</button>
+                </div>
+            </form>
+            <?php endif; ?>
           </div>
         </div>
       <?php endforeach; ?>
     </div>
   <?php endif; ?>
-</div>
 <?php
+$splitLayoutRight = ob_get_clean();
+
+// 2. Wrap with split layout
+ob_start();
+include $ROOT . '/features/shared/components/layouts/split-content-layout.php';
 $content = ob_get_clean();
 
-// 2. Wrap with dashboard layout
+// 3. Wrap with dashboard layout
 ob_start();
 include $ROOT . '/features/shared/components/layouts/app-layout.php';
 $content = ob_get_clean();
 
-// 3. Render with base layout
+// 4. Render with base layout
 $pageTitle = 'Donations';
 $additionalStyles = [
+    url('features/shared/assets/css/split-content-layout.css'),
     url('features/donations/admin/assets/donations-admin.css')
 ];
 include $ROOT . '/features/shared/components/layouts/base.php';
 ?>
+<script>
+function toggleEditForm(id){
+    var f = document.getElementById('edit-form-' + id);
+    if(!f) return;
+    f.style.display = (f.style.display === 'none' || f.style.display === '') ? 'block' : 'none';
+}
+</script>
