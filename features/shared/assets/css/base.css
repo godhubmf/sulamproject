@@ -10,7 +10,7 @@
 @import 'links.css';
 @import 'buttons.css';
 @import 'badges.css';
-@import 'forms.css';
+@import 'forms.css?v=2';
 @import 'tables.css';
 @import 'icons.css';
 @import 'cards.css';

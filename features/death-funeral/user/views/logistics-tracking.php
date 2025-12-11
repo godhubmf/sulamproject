@@ -1,6 +1,6 @@
 <div class="card page-card">
     <h2>Funeral Logistics</h2>
-    <p style="color: var(--muted);">View and track funeral logistics arranged for death notifications.</p>
+    <p>View and track funeral logistics arranged for death notifications.</p>
 
     <?php if (empty($funeralLogistics)): ?>
         <div class="empty-state" style="padding: 2rem; text-align: center; color: var(--muted);">
@@ -8,29 +8,29 @@
             <p>No funeral logistics scheduled yet or pending verification of notifications.</p>
         </div>
     <?php else: ?>
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+        <div class="grid-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
             <?php foreach ($funeralLogistics as $logistics): ?>
-                <div class="card" style="border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 8px;">
+                <div class="card">
                     <h3 style="margin-top: 0; margin-bottom: 1rem;">Funeral Arrangement</h3>
                     
-                    <div style="margin-bottom: 0.75rem;">
-                        <strong style="display: block; color: var(--text-secondary); font-size: 0.85rem;">Burial Date</strong>
-                        <span><?php echo htmlspecialchars($logistics['burial_date'] ?? 'TBD'); ?></span>
+                    <div class="form-group">
+                        <label>Burial Date</label>
+                        <div class="form-control-static"><?php echo htmlspecialchars($logistics['burial_date'] ?? 'TBD'); ?></div>
                     </div>
                     
-                    <div style="margin-bottom: 0.75rem;">
-                        <strong style="display: block; color: var(--text-secondary); font-size: 0.85rem;">Burial Location</strong>
-                        <span><?php echo htmlspecialchars($logistics['burial_location'] ?? 'TBD'); ?></span>
+                    <div class="form-group">
+                        <label>Burial Location</label>
+                        <div class="form-control-static"><?php echo htmlspecialchars($logistics['burial_location'] ?? 'TBD'); ?></div>
                     </div>
                     
-                    <div style="margin-bottom: 0.75rem;">
-                        <strong style="display: block; color: var(--text-secondary); font-size: 0.85rem;">Grave Number</strong>
-                        <span><?php echo htmlspecialchars($logistics['grave_number'] ?? '-'); ?></span>
+                    <div class="form-group">
+                        <label>Grave Number</label>
+                        <div class="form-control-static"><?php echo htmlspecialchars($logistics['grave_number'] ?? '-'); ?></div>
                     </div>
                     
                     <?php if (!empty($logistics['notes'])): ?>
-                        <div style="margin-bottom: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color);">
-                            <strong style="display: block; color: var(--text-secondary); font-size: 0.85rem;">Notes</strong>
+                        <div class="form-group" style="padding-top: 0.75rem; border-top: 1px solid var(--border-color);">
+                            <label>Notes</label>
                             <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;"><?php echo nl2br(htmlspecialchars($logistics['notes'])); ?></p>
                         </div>
                     <?php endif; ?>

@@ -46,18 +46,18 @@ ob_start();
 <div class="death-page">
 
   <?php if ($message): ?>
-    <div class="<?php echo $messageClass; ?>" style="margin-bottom: 1rem; padding: 1rem; border-radius: 8px; background: <?php echo strpos($messageClass, 'success') !== false ? '#d1fae5' : '#fee2e2'; ?>; color: <?php echo strpos($messageClass, 'success') !== false ? '#065f46' : '#991b1b'; ?>;">
+    <div class="alert <?php echo $messageClass; ?>">
         <?php echo $message; ?>
     </div>
   <?php endif; ?>
 
   <?php include $ROOT . '/features/death-funeral/admin/views/manage-notifications.php'; ?>
 
-  <div style="margin-top:1.5rem;">
+  <div class="mt-4">
     <?php include $ROOT . '/features/death-funeral/admin/views/verify-death.php'; ?>
   </div>
 
-  <div style="margin-top:1.5rem; display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
+  <div class="grid-2-col mt-4">
     <div>
       <?php include $ROOT . '/features/death-funeral/admin/views/record-logistics.php'; ?>
     </div>

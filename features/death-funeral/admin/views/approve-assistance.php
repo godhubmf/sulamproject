@@ -1,8 +1,8 @@
 <div class="card page-card">
     <h2>Approve Assistance</h2>
-    <p style="color: var(--muted);">Approve or decline funeral assistance requests.</p>
+    <p>Approve or decline funeral assistance requests.</p>
 
-    <div class="notice">
+    <div class="alert alert-info">
         Review assistance requests and update status to approved when appropriate.
     </div>
 

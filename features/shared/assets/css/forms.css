@@ -11,6 +11,9 @@ input[type=password],
 input[type=email],
 input[type=number],
 input[type=tel],
+input[type=date],
+input[type=datetime-local],
+.form-control,
 textarea,
 select {
   box-sizing: border-box;
@@ -28,6 +31,9 @@ input[type=password]:focus,
 input[type=email]:focus,
 input[type=number]:focus,
 input[type=tel]:focus,
+input[type=date]:focus,
+input[type=datetime-local]:focus,
+.form-control:focus,
 textarea:focus,
 select:focus {
   outline: none;
