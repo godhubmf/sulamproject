@@ -48,7 +48,7 @@ class ProfileController extends BaseController {
         $this->requireAuth();
         $userId = $this->currentUser['id'];
 
-        $stmt = $this->mysqli->prepare('SELECT id, name, username, email, phone_number, address, marital_status, income FROM users WHERE id=? LIMIT 1');
+        $stmt = $this->mysqli->prepare('SELECT id, name, username, email, phone_number, address, housing_status, marital_status, income FROM users WHERE id=? LIMIT 1');
         $stmt->bind_param('i', $userId);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -89,6 +89,7 @@ class ProfileController extends BaseController {
         $email = trim($_POST['email'] ?? '');
         $phone_number = trim($_POST['phone_number'] ?? '');
         $address = trim($_POST['address'] ?? '');
+        $housing_status = trim($_POST['housing_status'] ?? '');
         $marital_status = trim($_POST['marital_status'] ?? '');
         $income_range = trim($_POST['income_range'] ?? '');
         
@@ -102,8 +103,8 @@ class ProfileController extends BaseController {
         }
 
         // Update
-        $stmt = $this->mysqli->prepare('UPDATE users SET name=?, email=?, phone_number=?, address=?, marital_status=?, income=? WHERE id=?');
-        $stmt->bind_param('sssssdi', $name, $email, $phone_number, $address, $marital_status, $income, $userId);
+        $stmt = $this->mysqli->prepare('UPDATE users SET name=?, email=?, phone_number=?, address=?, housing_status=?, marital_status=?, income=? WHERE id=?');
+        $stmt->bind_param('sssssdi', $name, $email, $phone_number, $address, $housing_status, $marital_status, $income, $userId);
         
         if ($stmt->execute()) {
             $stmt->close();
