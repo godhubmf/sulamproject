@@ -29,6 +29,7 @@
                     <th>Username</th>
                     <th>Role</th>
                     <th>Income Class</th>
+                    <th>Housing Status</th>
                     <th class="table__cell--numeric">Dependents</th>
                     <th>Email</th>
                     <th>Phone</th>
@@ -46,7 +47,7 @@
                                 <?php echo e($user['roles']); ?>
                             </span>
                         </td>
-                        <td>
+                        <td style="text-align:center;">
                             <?php
                                 $income = $user['income'];
                                 $incomeClass = '-';
@@ -62,7 +63,19 @@
                                 echo $incomeClass;
                             ?>
                         </td>
-                        <td class="table__cell--numeric">
+                        <td style="text-align:center;">
+                            <?php
+                                $hs = $user['housing_status'] ?? '';
+                                if ($hs === 'renting') {
+                                    echo 'Renting';
+                                } elseif ($hs === 'own_house') {
+                                    echo 'Own House';
+                                } else {
+                                    echo '-';
+                                }
+                            ?>
+                        </td>
+                        <td class="table__cell--numeric" style="text-align:center;">
                             <?php echo isset($user['dependent_count']) ? $user['dependent_count'] : 0; ?>
                         </td>
                         <td><?php echo e($user['email']); ?></td>

@@ -47,6 +47,19 @@ ob_start();
                     <textarea id="address" name="address" rows="3"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
                 </div>
 
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label for="housing_status">Housing Status</label>
+                    <select id="housing_status" name="housing_status">
+                        <option value="">Select Housing Status</option>
+                        <option value="renting" <?php echo ($user['housing_status'] ?? '') === 'renting' ? 'selected' : ''; ?>>
+                            Renting
+                        </option>
+                        <option value="own_house" <?php echo ($user['housing_status'] ?? '') === 'own_house' ? 'selected' : ''; ?>>
+                            Own House
+                        </option>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <label for="marital_status">Marital Status</label>
                     <select id="marital_status" name="marital_status">
