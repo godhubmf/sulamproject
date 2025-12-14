@@ -290,25 +290,25 @@ function formatAmount($value) {
                 <tbody>
                     <?php foreach ($payments as $row): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($row['tx_date']); ?></td>
+                        <td><?php echo htmlspecialchars($row['tx_date'] ?? ''); ?></td>
                         <td>
                             <?php if (!empty($row['voucher_number'])): ?>
-                                <span class="badge badge-light border"><?php echo htmlspecialchars($row['voucher_number']); ?></span>
+                                <span class="badge badge-light border"><?php echo htmlspecialchars($row['voucher_number'] ?? ''); ?></span>
                             <?php else: ?>
                                 <span class="text-muted">-</span>
                             <?php endif; ?>
                         </td>
                         <td class="sticky-col-left">
-                            <div style="font-weight: 600;"><?php echo htmlspecialchars($row['description']); ?></div>
-                            <div style="color: #6b7280; font-size: 0.85em;"><?php echo htmlspecialchars($row['paid_to']); ?></div>
+                            <div style="font-weight: 600;"><?php echo htmlspecialchars($row['description'] ?? ''); ?></div>
+                            <div style="color: #6b7280; font-size: 0.85em;"><?php echo htmlspecialchars($row['paid_to'] ?? ''); ?></div>
                         </td>
                         <td>
                             <span class="badge badge-light border">
                                 <?php echo htmlspecialchars(ucfirst($row['payment_method'] ?? 'cash')); ?>
                             </span>
                             <?php if (!empty($row['payment_reference'])): ?>
-                                <div class="badge-ref" onclick="copyRef('<?php echo htmlspecialchars($row['payment_reference'], ENT_QUOTES); ?>', this)" title="Click to copy">
-                                    Ref: <?php echo htmlspecialchars($row['payment_reference']); ?>
+                                <div class="badge-ref" onclick="copyRef('<?php echo htmlspecialchars($row['payment_reference'] ?? '', ENT_QUOTES); ?>', this)" title="Click to copy">
+                                    Ref: <?php echo htmlspecialchars($row['payment_reference'] ?? ''); ?>
                                 </div>
                             <?php endif; ?>
                         </td>

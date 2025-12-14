@@ -346,8 +346,358 @@
 }
 
 /* =========================================
-   Responsive Design
+   Responsive Design - ENHANCED
    ========================================= */
+
+/* =====================================
+   TABLET (768px - 1023px)
+   ===================================== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .bento-2x2,
+  .bento-2x1 {
+    grid-column: span 2;
+  }
+  
+  .bento-1x1 {
+    grid-column: span 1;
+  }
+
+  /* Hero adjustments */
+  .card-hero-user {
+    min-height: 220px;
+  }
+  
+  .hero-title {
+    font-size: 1.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .hero-prayer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Quick action cards */
+  .quick-action-card {
+    padding: 1.25rem;
+  }
+  
+  /* Preview cards */
+  .preview-content {
+    gap: 1rem;
+  }
+}
+
+/* =====================================
+   MOBILE (< 768px)
+   ===================================== */
+@media (max-width: 767px) {
+  /* Page layout */
+  .page-header-margin {
+    padding-bottom: 1rem;
+  }
+  
+  /* Bento grid - single column */
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .bento-1x1,
+  .bento-2x1,
+  .bento-2x2 {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+
+  /* ===== HERO CARD ===== */
+  .card-hero-user {
+    min-height: auto;
+    padding: 1.25rem;
+  }
+  
+  .hero-title {
+    font-size: 1.35rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.85rem;
+    max-width: 100%;
+  }
+  
+  /* Hero Date Pills */
+  .hero-date-pills {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  
+  .date-pill {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  
+  .date-pill i {
+    font-size: 0.8rem;
+  }
+  
+  /* Hero Prayer Times */
+  .hero-prayer-times {
+    margin-top: 1rem;
+  }
+  
+  .hero-prayer-header {
+    font-size: 0.7rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .hero-prayer-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .hero-prayer-item {
+    padding: 0.45rem;
+  }
+  
+  .hero-prayer-name {
+    font-size: 0.6rem;
+  }
+  
+  .hero-prayer-time {
+    font-size: 0.8rem;
+  }
+  
+  /* ===== QUICK ACTION CARDS ===== */
+  .quick-action-card {
+    padding: 1rem;
+  }
+  
+  .action-icon-wrapper {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .action-icon {
+    font-size: 1.1rem;
+  }
+  
+  .action-title {
+    font-size: 0.95rem;
+  }
+  
+  .action-subtitle {
+    font-size: 0.75rem;
+  }
+  
+  /* ===== PREVIEW CARDS ===== */
+  .card-preview {
+    padding: 1rem;
+  }
+  
+  .preview-content {
+    gap: 0.875rem;
+  }
+  
+  .preview-icon,
+  .preview-date-box {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .preview-icon i {
+    font-size: 1.25rem;
+  }
+  
+  .preview-date-day {
+    font-size: 1.1rem;
+  }
+  
+  .preview-date-month {
+    font-size: 0.6rem;
+  }
+  
+  .preview-title {
+    font-size: 0.95rem;
+  }
+  
+  .preview-meta {
+    font-size: 0.75rem;
+  }
+  
+  .preview-arrow {
+    width: 32px;
+    height: 32px;
+  }
+  
+  /* ===== SECTION TITLES ===== */
+  .bento-title {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* ===== STAT CARDS ===== */
+  .card-stat {
+    padding: 1rem;
+  }
+  
+  .stat-icon-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .stat-icon {
+    font-size: 1rem;
+  }
+  
+  .stat-value {
+    font-size: 1.35rem;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* =====================================
+   LARGE MOBILE (480px - 767px)
+   ===================================== */
+@media (min-width: 480px) and (max-width: 767px) {
+  /* Allow 3-column prayer times on larger mobile */
+  .hero-prayer-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  /* Date pills in a row */
+  .hero-date-pills {
+    flex-direction: row;
+  }
+  
+  .date-pill {
+    flex: 1;
+  }
+}
+
+/* =====================================
+   SMALL MOBILE (< 480px)
+   ===================================== */
+@media (max-width: 479px) {
+  /* Hero - more compact */
+  .card-hero-user {
+    padding: 1rem;
+  }
+  
+  .hero-title {
+    font-size: 1.2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.8rem;
+  }
+  
+  /* Prayer times - 2 columns on very small screens */
+  .hero-prayer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Date pills - stack vertically */
+  .hero-date-pills {
+    flex-direction: column;
+  }
+  
+  .date-pill {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Cards more compact */
+  .quick-action-card,
+  .card-preview {
+    padding: 0.875rem;
+  }
+  
+  .action-icon-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .action-icon {
+    font-size: 1rem;
+  }
+  
+  .action-title {
+    font-size: 0.9rem;
+  }
+  
+  .action-subtitle {
+    font-size: 0.7rem;
+  }
+  
+  /* Preview cards - smaller icons */
+  .preview-icon,
+  .preview-date-box {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .preview-icon i {
+    font-size: 1.1rem;
+  }
+  
+  .preview-date-day {
+    font-size: 1rem;
+  }
+  
+  .preview-title {
+    font-size: 0.9rem;
+  }
+  
+  .preview-meta {
+    font-size: 0.7rem;
+  }
+}
+
+/* =====================================
+   TOUCH ENHANCEMENTS
+   ===================================== */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch device - larger touch targets */
+  .quick-action-card,
+  .card-preview {
+    min-height: 80px;
+  }
+  
+  /* Remove hover effects on touch */
+  .quick-action-card:hover,
+  .card-preview:hover {
+    transform: none;
+  }
+  
+  /* Add active state instead */
+  .quick-action-card:active,
+  .card-preview:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  .hero-prayer-item:hover {
+    transform: none;
+  }
+  
+  .hero-prayer-item:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Legacy breakpoints - maintained for compatibility */
 @media (max-width: 1024px) {
   .bento-grid {
     grid-template-columns: repeat(2, 1fr);

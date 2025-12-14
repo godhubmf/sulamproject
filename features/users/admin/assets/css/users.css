@@ -3,3 +3,92 @@
 .table--users {
   /* Styles specific to users admin table if needed */
 }
+
+/* =========================================
+   MOBILE RESPONSIVE STYLES
+   ========================================= */
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Slightly smaller table on tablet */
+  .table--users th,
+  .table--users td {
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile (<768px) */
+@media (max-width: 767px) {
+  /* Compact table sizing */
+  .table th,
+  .table td {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  /* Hide non-essential columns on mobile */
+  .table th:nth-child(4),
+  .table td:nth-child(4),
+  .table th:nth-child(6),
+  .table td:nth-child(6),
+  .table th:nth-child(7),
+  .table td:nth-child(7) {
+    display: none; /* Hide Income Class, Email, Phone on mobile */
+  }
+  
+  /* Badges - more compact */
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+  
+  /* Action buttons in tables */
+  .table__cell--actions {
+    min-width: 100px;
+  }
+  
+  .table__cell--actions .btn {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.75rem;
+  }
+  
+  /* Filter card - stack elements */
+  .card--outline > div[style*="display: flex"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.875rem;
+  }
+  
+  .card--outline h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card--outline select {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+}
+
+/* Small mobile (<480px) */
+@media (max-width: 479px) {
+  .table th,
+  .table td {
+    padding: 0.5rem 0.625rem;
+    font-size: 0.8rem;
+  }
+  
+  /* Hide even more columns on very small screens */
+  .table th:nth-child(5),
+  .table td:nth-child(5) {
+    display: none; /* Also hide Dependents count */
+  }
+  
+  /* Show essential only: Name, Username, Role, Status, Actions */
+  .table__cell--actions .btn {
+    padding: 0.325rem 0.5rem;
+    font-size: 0.7rem;
+  }
+}

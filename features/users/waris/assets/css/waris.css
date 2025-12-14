@@ -1,3 +1,95 @@
 /* Waris User Table Modifiers */
 
 /* Use compact table for waris list */
+
+/* =========================================
+   MOBILE RESPONSIVE STYLES
+   ========================================= */
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Waris tables - slightly smaller */
+  .table th,
+  .table td {
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile (<768px) */
+@media (max-width: 767px) {
+  /* Compact waris tables */
+  .table th,
+  .table td {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  /* Hide non-essential columns */
+  .table th:nth-child(3),
+  .table td:nth-child(3),
+  .table th:nth-child(4),
+  .table td:nth-child(4) {
+    display: none; /* Hide IC Number and Phone on mobile */
+  }
+  
+  /* Waris cards - stack content */
+  .card {
+    padding: 1rem;
+  }
+  
+  .card h3,
+  .card h4 {
+    font-size: 1rem;
+  }
+  
+  .card p {
+    font-size: 0.875rem;
+  }
+  
+  /* Waris forms - stack fields */
+  .waris-form .grid-2,
+  .waris-form .grid-3 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  /* Relationship badges */
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+  
+  /* Action buttons */
+  .table__cell--actions .btn {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.75rem;
+  }
+  
+  /* Add waris button */
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Small mobile (<480px) */
+@media (max-width: 479px) {
+  .table th,
+  .table td {
+    padding: 0.5rem 0.625rem;
+    font-size: 0.8rem;
+  }
+  
+  /* Show only Name, Relationship, and Actions */
+  .table th:nth-child(2),
+  .table td:nth-child(2) {
+    display: none; /* Also hide Address */
+  }
+  
+  .table__cell--actions .btn {
+    padding: 0.325rem 0.5rem;
+    font-size: 0.7rem;
+  }
+}

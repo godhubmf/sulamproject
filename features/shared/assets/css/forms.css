@@ -57,3 +57,113 @@ select:focus {
   grid-template-columns: 1fr 1fr 1fr;
   gap: 0.75rem;
 }
+
+/* =========================================
+   MOBILE RESPONSIVE STYLES
+   ========================================= */
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* 3-column grid becomes 2 columns */
+  .grid-3 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Mobile (<768px) */
+@media (max-width: 767px) {
+  /* Prevent iOS zoom on input focus */
+  input[type=text],
+  input[type=password],
+  input[type=email],
+  input[type=number],
+  input[type=tel],
+  input[type=date],
+  input[type=datetime-local],
+  .form-control,
+  textarea,
+  select {
+    font-size: 16px !important;
+    padding: 0.75rem;
+  }
+  
+  /* Stack all grid layouts */
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  /* Form groups - more spacing on mobile */
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+  
+  /* Labels - larger and clearer */
+  label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Textareas - minimum height */
+  textarea {
+    min-height: 120px;
+  }
+  
+  /* Select dropdowns - better touch target */
+  select {
+    min-height: 44px;
+    padding-right: 2.5rem;
+    background-position: right 0.75rem center;
+  }
+  
+  /* Focus state - larger shadow for better visibility */
+  input[type=text]:focus,
+  input[type=password]:focus,
+  input[type=email]:focus,
+  input[type=number]:focus,
+  input[type=tel]:focus,
+  input[type=date]:focus,
+  input[type=datetime-local]:focus,
+  .form-control:focus,
+  textarea:focus,
+  select:focus {
+    box-shadow: 0 0 0 4px rgba(15, 138, 95, 0.15);
+  }
+  
+  /* Override any inline grid styles */
+  [style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Large mobile (480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+  /* Allow 2-column grids on larger phones */
+  .grid-2 {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.875rem !important;
+  }
+}
+
+/* Small mobile (<480px) */
+@media (max-width: 479px) {
+  input[type=text],
+  input[type=password],
+  input[type=email],
+  input[type=number],
+  input[type=tel],
+  input[type=date],
+  input[type=datetime-local],
+  .form-control,
+  textarea,
+  select {
+    padding: 0.875rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+}

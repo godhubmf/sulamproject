@@ -120,7 +120,7 @@ $formData = $isEdit ? $record : ($old ?? []);
             <div id="hidden-category-inputs"></div>
 
             <!-- Buttons -->
-            <div class="form-actions" style="margin-top: 1.5rem;">
+            <div class="form-actions" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
                 <button type="submit" class="btn btn-success">
                     <i class="fas fa-save"></i> <?php echo $isEdit ? 'Update Record' : 'Save Record'; ?>
                 </button>

@@ -452,3 +452,389 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* =========================================
+   MOBILE RESPONSIVE STYLES
+   ========================================= */
+
+/* =====================================
+   TABLET (768px - 1023px)
+   ===================================== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Hero card adjustments */
+  .card-hero {
+    min-height: 220px;
+  }
+  
+  .hero-title {
+    font-size: 1.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .hero-stats {
+    gap: 1rem;
+  }
+  
+  .stat-pill {
+    padding: 0.4rem 0.875rem;
+  }
+  
+  /* Prayer times grid - 2 columns on tablet */
+  .hero-prayer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Stat cards - slightly smaller */
+  .card-stat-simple {
+    padding: 1.25rem;
+  }
+  
+  .stat-number {
+    font-size: 1.35rem;
+  }
+  
+  /* Nav cards - adjust spacing */
+  .nav-icon-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .nav-icon {
+    font-size: 1.1rem;
+  }
+}
+
+/* =====================================
+   MOBILE (< 768px)
+   ===================================== */
+@media (max-width: 767px) {
+  /* Page header margin */
+  .page-header-margin {
+    padding-bottom: 1rem;
+  }
+  
+  /* ===== HERO CARD ===== */
+  .card-hero {
+    min-height: auto;
+    padding: 1.25rem;
+  }
+  
+  .hero-title {
+    font-size: 1.35rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.85rem;
+    max-width: 100%;
+  }
+  
+  /* Hero Stats - Stack on mobile */
+  .hero-stats {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  
+  .stat-pill {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.875rem;
+  }
+  
+  .stat-pill .stat-label {
+    font-size: 0.75rem;
+    margin-bottom: 0;
+  }
+  
+  .stat-pill .stat-value {
+    font-size: 1rem;
+  }
+  
+  /* Hero Date Pills - Stack on very small screens */
+  .hero-date-pills {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  
+  .date-pill {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .date-pill i {
+    font-size: 0.85rem;
+  }
+  
+  /* Hero Prayer Times */
+  .hero-prayer-times {
+    margin-top: 1rem;
+  }
+  
+  .hero-prayer-header {
+    font-size: 0.8rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .hero-prayer-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .hero-prayer-item {
+    padding: 0.5rem;
+  }
+  
+  .hero-prayer-name {
+    font-size: 0.6rem;
+  }
+  
+  .hero-prayer-time {
+    font-size: 0.85rem;
+  }
+  
+  /* ===== STAT CARDS ===== */
+  .card-stat-simple {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+  
+  .stat-number {
+    font-size: 1.35rem;
+  }
+  
+  .stat-desc {
+    font-size: 0.75rem;
+  }
+  
+  .bento-icon-sm {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .bento-icon-sm i {
+    font-size: 1rem;
+  }
+  
+  /* ===== NAV CARDS ===== */
+  .nav-card {
+    padding: 1rem;
+  }
+  
+  .nav-icon-wrapper {
+    width: 38px;
+    height: 38px;
+    margin-bottom: 0.75rem;
+  }
+  
+  .nav-icon {
+    font-size: 1.1rem;
+  }
+  
+  .nav-info h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  .nav-info small {
+    font-size: 0.75rem;
+  }
+  
+  /* Horizontal Nav Card (User Management) */
+  .card-highlight {
+    flex-direction: row;
+    padding: 1rem;
+  }
+  
+  .card-highlight .nav-icon-wrapper {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .card-highlight p {
+    font-size: 0.8rem;
+    max-width: 100%;
+  }
+  
+  /* ===== SECTION TITLES ===== */
+  .bento-title {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* ===== PRAYER TIMES WIDGET ===== */
+  .card-prayer-times {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+  
+  .prayer-header {
+    padding-bottom: 0.5rem;
+  }
+  
+  .prayer-title {
+    font-size: 0.95rem;
+  }
+  
+  .prayer-subtitle {
+    font-size: 0.7rem;
+  }
+  
+  .prayer-times-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .prayer-time-item {
+    padding: 0.45rem;
+  }
+  
+  .prayer-name {
+    font-size: 0.65rem;
+  }
+  
+  .prayer-time {
+    font-size: 0.85rem;
+  }
+}
+
+/* =====================================
+   LARGE MOBILE (480px - 767px)
+   ===================================== */
+@media (min-width: 480px) and (max-width: 767px) {
+  /* Allow 3-column prayer times on larger mobile */
+  .hero-prayer-grid,
+  .prayer-times-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  /* Hero stats can be 2 columns if space allows */
+  .hero-stats {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .stat-pill {
+    flex: 1;
+    min-width: 45%;
+  }
+}
+
+/* =====================================
+   SMALL MOBILE (< 480px)
+   ===================================== */
+@media (max-width: 479px) {
+  /* Hero card - more compact */
+  .card-hero {
+    padding: 1rem;
+  }
+  
+  .hero-title {
+    font-size: 1.2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.8rem;
+  }
+  
+  /* Prayer times - 2 columns on very small screens */
+  .hero-prayer-grid,
+  .prayer-times-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Date pills - full width */
+  .hero-date-pills {
+    flex-direction: column;
+  }
+  
+  .date-pill {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Stat cards - more compact */
+  .card-stat-simple {
+    padding: 0.875rem;
+  }
+  
+  .stat-number {
+    font-size: 1.25rem;
+  }
+  
+  /* Nav cards - more compact */
+  .nav-card {
+    padding: 0.875rem;
+  }
+  
+  .nav-icon-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .nav-icon {
+    font-size: 1rem;
+  }
+  
+  .nav-info h3 {
+    font-size: 0.9rem;
+  }
+  
+  .nav-info small {
+    font-size: 0.7rem;
+  }
+  
+  /* Horizontal nav card - stack on very small screens */
+  .card-highlight {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .nav-flex {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card-highlight p {
+    font-size: 0.75rem;
+  }
+  
+  .nav-arrow {
+    align-self: flex-end;
+  }
+}
+
+/* =====================================
+   TOUCH ENHANCEMENTS
+   ===================================== */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch device - larger touch targets */
+  .nav-card,
+  .card-highlight {
+    min-height: 80px;
+  }
+  
+  /* Remove hover effects on touch */
+  .nav-card:hover {
+    transform: none;
+  }
+  
+  /* Add active state instead */
+  .nav-card:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  .hero-prayer-item:hover {
+    transform: none;
+  }
+  
+  .hero-prayer-item:active {
+    transform: scale(0.98);
+  }
+}

@@ -36,3 +36,130 @@
     padding: 0;
   }
 }
+
+/* =========================================
+   MOBILE RESPONSIVE STYLES
+   ========================================= */
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .table--families th,
+  .table--families td {
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+  }
+  
+  .table--families thead th {
+    font-size: 0.8rem;
+  }
+}
+
+/* Mobile (<768px) */
+@media (max-width: 767px) {
+  /* Compact table for mobile */
+  .table--families th,
+  .table--families td {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .table--families thead th {
+    font-size: 0.75rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Table responsive container adjustments */
+  .table-responsive {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+  
+  /* Hide non-essential columns on mobile */
+  .table--families th:nth-child(3),
+  .table--families td:nth-child(3) {
+    display: none; /* Hide Address column */
+  }
+  
+  /* Make contact info more compact */
+  .table--families .text-muted {
+    font-size: 0.75rem;
+  }
+  
+  /* Filter section - stack on mobile */
+  .card--outline > div {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem;
+  }
+  
+  .card--outline select {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+  
+  /* Actions bar - stack buttons */
+  .content-container > div[style*="flex"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  
+  .content-container .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Dependents list - more compact */
+  .table--families ul {
+    padding-left: 0.875rem;
+  }
+  
+  .table--families li {
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+  
+  /* Badge adjustments */
+  .table--families .badge-sm {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+  
+  /* Empty state */
+  .notice[style*="text-align: center"] {
+    padding: 2rem 1rem !important;
+  }
+  
+  .notice i {
+    font-size: 2rem !important;
+  }
+  
+  .notice p {
+    font-size: 0.95rem !important;
+  }
+}
+
+/* Small mobile (<480px) */
+@media (max-width: 479px) {
+  .table--families th,
+  .table--families td {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .table--families thead th {
+    font-size: 0.7rem;
+  }
+  
+  /* Also hide Contact column on very small screens */
+  .table--families th:nth-child(2),
+  .table--families td:nth-child(2) {
+    display: none;
+  }
+  
+  /* Show essential info only: Name and Dependents */
+  .table--families td > div {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+}

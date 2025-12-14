@@ -20,3 +20,117 @@
     display: flex;
     align-items: center;
 }
+
+/* =========================================
+   MOBILE RESPONSIVE STYLES
+   ========================================= */
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .profile-card-header {
+    padding: 0.875rem 1rem;
+  }
+  
+  .profile-card-header h3 {
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile (<768px) */
+@media (max-width: 767px) {
+  /* Card header - more compact */
+  .profile-card-header {
+    padding: 0.75rem 1rem;
+    margin: -1rem -1rem 1rem -1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .profile-card-header h3 {
+    font-size: 0.9rem;
+  }
+  
+  /* Profile forms - stack all fields */
+  .grid-2 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  /* Form groups */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  
+  .form-group small {
+    font-size: 0.75rem;
+  }
+  
+  /* Input fields */
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    font-size: 16px !important; /* Prevent iOS zoom */
+    padding: 0.75rem;
+  }
+  
+  .form-group textarea {
+    min-height: 100px;
+  }
+  
+  /* Disabled inputs */
+  .form-group input:disabled {
+    font-size: 16px !important;
+  }
+  
+  /* Submit buttons */
+  .form-group button[type="submit"],
+  .form-group .btn {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  /* Income options layout */
+  .form-group[style*="grid-column"] {
+    grid-column: 1 !important;
+  }
+  
+  /* Password section */
+  .profile-card-header + .card-body {
+    padding: 1rem;
+  }
+  
+  /* Notices in forms */
+  .notice {
+    margin-bottom: 0.875rem;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Small mobile (<480px) */
+@media (max-width: 479px) {
+  .profile-card-header {
+    padding: 0.625rem 0.875rem;
+  }
+  
+  .profile-card-header h3 {
+    font-size: 0.85rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+  
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 0.875rem;
+  }
+}

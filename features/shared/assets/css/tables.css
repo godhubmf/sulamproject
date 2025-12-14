@@ -123,3 +123,111 @@
   /* Seamless shadow */
   transition: box-shadow 0.2s ease;
 }
+
+/* =========================================
+   MOBILE RESPONSIVE STYLES
+   ========================================= */
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .table {
+    font-size: 0.875rem;
+  }
+  
+  .table th,
+  .table td {
+    padding: 0.625rem 0.75rem;
+  }
+  
+  .table-responsive {
+    max-height: calc(100vh - 200px);
+  }
+}
+
+/* Mobile (<768px) */
+@media (max-width: 767px) {
+  /* Compact table sizing */
+  .table {
+    font-size: 0.8rem;
+    min-width: 100%;
+  }
+  
+  .table th,
+  .table td {
+    padding: 0.5rem 0.625rem;
+    white-space: nowrap;
+  }
+  
+  /* Adjust table container */
+  .table-responsive {
+    max-height: calc(100vh - 180px);
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  
+  /* Compact mode even more compact on mobile */
+  .table--compact th,
+  .table--compact td {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  /* Action cells - keep buttons visible */
+  .table__cell--actions {
+    min-width: 80px;
+  }
+  
+  /* Numeric cells */
+  .table__cell--numeric {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  
+  /* Add scroll hint for wide tables */
+  .table-responsive::after {
+    content: '← Swipe to view more →';
+    display: block;
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.7rem;
+    color: var(--muted);
+    background: rgba(15, 138, 95, 0.04);
+    border-top: 1px solid var(--border-subtle);
+  }
+  
+  /* Hide hint after scrolling */
+  .table-responsive.scrolled::after {
+    display: none;
+  }
+  
+  /* Striped rows - lighter on mobile */
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(6, 46, 29, 0.015);
+  }
+  
+  /* Hover effect - remove on touch devices */
+  @media (hover: none) {
+    .table-hover tbody tr:hover {
+      background-color: transparent;
+    }
+  }
+}
+
+/* Small mobile (<480px) */
+@media (max-width: 479px) {
+  .table {
+    font-size: 0.75rem;
+  }
+  
+  .table th,
+  .table td {
+    padding: 0.4rem 0.5rem;
+  }
+  
+  .table-responsive {
+    max-height: calc(100vh - 160px);
+  }
+}

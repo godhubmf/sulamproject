@@ -76,3 +76,100 @@
   justify-content: center;
   margin-top: 1.25rem;
 }
+
+/* =========================================
+   MOBILE RESPONSIVE STYLES
+   ========================================= */
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .btn,
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.625rem 1rem;
+  }
+  
+  .actions {
+    gap: 0.625rem;
+  }
+}
+
+/* Mobile (<768px) */
+@media (max-width: 767px) {
+  /* Touch-friendly button sizing */
+  .btn,
+  .btn-primary,
+  .btn-secondary {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Small buttons still need minimum touch target */
+  .btn-sm {
+    min-height: 40px;
+    padding: 0.5rem 0.875rem;
+    width: 100%;
+  }
+  
+  /* Stack button groups vertically */
+  .actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  
+  /* Outline buttons */
+  .btn.outline {
+    border-width: 2px;
+  }
+  
+  /* Active state for touch feedback */
+  .btn:active,
+  .btn-primary:active,
+  .btn-secondary:active {
+    transform: scale(0.98);
+    filter: brightness(0.95);
+  }
+  
+  /* Remove hover effects on touch devices */
+  @media (hover: none) {
+    .btn:hover,
+    .btn-primary:hover,
+    .btn-secondary:hover {
+      filter: none;
+      background: var(--accent);
+    }
+    
+    .btn-secondary:hover {
+      background: #6b7280;
+    }
+  }
+}
+
+/* Large mobile (480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+  /* Allow side-by-side buttons on larger phones */
+  .actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .actions .btn,
+  .actions .btn-primary,
+  .actions .btn-secondary {
+    flex: 1;
+    min-width: 140px;
+  }
+}
+
+/* Small mobile (<480px) */
+@media (max-width: 479px) {
+  .btn,
+  .btn-primary,
+  .btn-secondary {
+    font-size: 0.9rem;
+    padding: 0.875rem 1rem;
+  }
+}
