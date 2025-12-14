@@ -41,9 +41,7 @@ $pageHeader = [
         ['label' => 'Home', 'url' => url('/')],
         ['label' => 'Events', 'url' => null],
     ],
-    'actions' => [
-        ['label' => 'View Calendar', 'icon' => 'fa-calendar', 'url' => url('features/events/admin/pages/calendar.php'), 'class' => 'btn-secondary'],
-    ]
+    'actions' => []
 ];
 
 // 1. Capture the Split Content

@@ -63,11 +63,8 @@ $userRole = $isAdmin ? 'Admin' : 'Resident';
         </div>
       </a>
       
-      <!-- Settings & Logout Side by Side -->
+      <!-- Logout -->
       <div class="sidebar-actions">
-        <a href="<?php echo $base; ?>/settings">
-          <i class="fas fa-cog"></i> Settings
-        </a>
         <a href="<?php echo $base; ?>/logout">
           <i class="fas fa-sign-out-alt"></i> Logout
         </a>
@@ -102,12 +99,6 @@ $userRole = $isAdmin ? 'Admin' : 'Resident';
       </a>
       <a href="https://chat.whatsapp.com/D589hP73ciZKgNPuDr1qR8" class="sidebar-social-link" aria-label="WhatsApp" title="WhatsApp">
         <i class="fa-brands fa-whatsapp"></i>
-      </a>
-      <a href="#" class="sidebar-social-link" aria-label="Instagram" title="Instagram">
-        <i class="fa-brands fa-instagram"></i>
-      </a>
-      <a href="#" class="sidebar-social-link" aria-label="Telegram" title="Telegram">
-        <i class="fa-brands fa-telegram"></i>
       </a>
     </div>
     

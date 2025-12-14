@@ -41,9 +41,7 @@ $pageHeader = [
         ['label' => 'Home', 'url' => url('/')],
         ['label' => 'Donations', 'url' => null],
     ],
-    'actions' => [
-        ['label' => 'View Reports', 'icon' => 'fa-chart-line', 'url' => url('features/reports/admin/pages/donations-report.php'), 'class' => 'btn-secondary'],
-    ]
+    'actions' => []
 ];
 
 // 1. Capture the Split Content

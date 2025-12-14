@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/../../../shared/lib/auth/AuthService.php';
+require_once __DIR__ . '/../../../shared/lib/database/Database.php';
 require_once __DIR__ . '/../../../shared/lib/utilities/csrf.php';
 require_once __DIR__ . '/../../../shared/lib/utilities/validation.php';
 require_once __DIR__ . '/../../../shared/lib/utilities/functions.php';
@@ -13,6 +14,34 @@ require_once __DIR__ . '/../../../shared/lib/audit/audit-log.php';
 class AuthController {
     private $authService;
     private $auditLog;
+
+    private function getPublicUpcomingEventsForCarousel(int $limit = 3): array {
+        $limit = max(1, min(6, (int)$limit));
+
+        try {
+            $db = Database::getInstance();
+            // Notes:
+            // - events table (current implementation) uses: title, event_date, event_time, location, image_path, is_active
+            // - include NULL dates as fallback, but prioritize dated upcoming events first
+            $sql = "
+                SELECT id, title, event_date, event_time, location, image_path
+                FROM events
+                WHERE is_active = 1
+                  AND (event_date IS NULL OR event_date >= CURDATE())
+                ORDER BY (event_date IS NULL) ASC,
+                         event_date ASC,
+                         (event_time IS NULL) ASC,
+                         event_time ASC,
+                         id DESC
+                LIMIT $limit
+            ";
+
+            $rows = $db->fetchAll($sql);
+            return is_array($rows) ? $rows : [];
+        } catch (Throwable $e) {
+            return [];
+        }
+    }
     
     public function __construct() {
         $this->authService = new AuthService();
@@ -33,6 +62,8 @@ class AuthController {
         $csrfToken = generateCsrfToken();
         
         $initialView = 'login';
+
+        $carouselEvents = $this->getPublicUpcomingEventsForCarousel(3);
         
         ob_start();
         include __DIR__ . '/../views/login.php';
@@ -91,6 +122,8 @@ class AuthController {
         $csrfToken = generateCsrfToken();
         
         $initialView = 'register';
+
+        $carouselEvents = $this->getPublicUpcomingEventsForCarousel(3);
 
         ob_start();
         include __DIR__ . '/../views/login.php';

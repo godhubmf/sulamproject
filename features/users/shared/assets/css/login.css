@@ -94,6 +94,14 @@ body {
     position: relative;
 }
 
+.event-carousel-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .date-badge-small {
     position: absolute;
     top: 1.5rem;
@@ -166,7 +174,8 @@ body {
     gap: 0.4rem;
 }
 
-.carousel-dots span {
+.carousel-dots span,
+.carousel-dots button {
     width: 6px;
     height: 6px;
     border-radius: 50%;
@@ -175,7 +184,13 @@ body {
     transition: all 0.2s;
 }
 
-.carousel-dots span.active {
+.carousel-dots button {
+    border: 0;
+    padding: 0;
+}
+
+.carousel-dots span.active,
+.carousel-dots button.active {
     background: var(--accent);
     transform: scale(1.2);
 }
@@ -360,4 +375,36 @@ body {
         flex-direction: column;
         gap: 1.25rem;
     }
+}
+
+/* Password show/hide */
+.password-field {
+    position: relative;
+}
+
+.password-field input {
+    padding-right: 2.75rem;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: 0;
+    padding: 0.25rem;
+    color: var(--muted);
+    cursor: pointer;
+    line-height: 1;
+}
+
+.password-toggle:focus {
+    outline: none;
+}
+
+.password-toggle:focus-visible {
+    outline: 2px solid rgba(15, 138, 95, 0.35);
+    outline-offset: 2px;
+    border-radius: 8px;
 }
