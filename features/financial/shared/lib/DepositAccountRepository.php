@@ -163,6 +163,40 @@ class DepositAccountRepository
 
         return $row ?: null;
     }
+    
+    /**
+     * Generate next receipt number in format RR/YEAR/COUNT
+     *
+     * @return string
+     */
+    public function generateReceiptNumber(): string
+    {
+        $year = date('Y');
+        $prefix = "RR/{$year}/";
+
+        // Find the highest count for this year
+        $sql = "SELECT receipt_number FROM financial_deposit_accounts
+                WHERE receipt_number LIKE ?
+                ORDER BY receipt_number DESC
+                LIMIT 1";
+
+        $stmt = $this->mysqli->prepare($sql);
+        $pattern = "RR/{$year}/%";
+        $stmt->bind_param('s', $pattern);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+
+        if ($row && !empty($row['receipt_number']) && preg_match('/RR\/\d{4}\/(\d+)/', $row['receipt_number'], $matches)) {
+            $nextCount = intval($matches[1]) + 1;
+        } else {
+            $nextCount = 1;
+        }
+
+        // Format with leading zeros (4 digits)
+        return $prefix . str_pad($nextCount, 4, '0', STR_PAD_LEFT);
+    }
 
     /**
      * Create a new deposit record
@@ -172,6 +206,11 @@ class DepositAccountRepository
      */
     public function create(array $data): int
     {
+        // Auto-generate receipt number if not provided or empty
+        if (empty($data['receipt_number'])) {
+            $data['receipt_number'] = $this->generateReceiptNumber();
+        }
+
         $columns = [
             'tx_date', 
             'description', 

@@ -29,9 +29,9 @@ $formData = $isEdit ? $record : ($old ?? []);
                 <div class="form-group">
                     <label for="receipt_number">No. Resit (Receipt Number)</label>
                     <input type="text" id="receipt_number" name="receipt_number" class="form-control" 
-                           placeholder="e.g. RR/2025/001"
-                           value="<?php echo htmlspecialchars($formData['receipt_number'] ?? ''); ?>">
-                    <small class="form-text text-muted">Optional. Leave blank to auto-generate later.</small>
+                           value="<?php echo htmlspecialchars($nextReceiptNumber ?? $formData['receipt_number'] ?? ''); ?>"
+                           readonly>
+                    <small class="form-text text-muted">Auto-generated receipt number</small>
                 </div>
 
                 <!-- Date -->
@@ -56,7 +56,7 @@ $formData = $isEdit ? $record : ($old ?? []);
                 </div>
 
                 <!-- Payment Reference -->
-                <div class="form-group">
+                <div class="form-group" id="reference-field">
                     <label for="payment_reference">No. Rujukan (Reference Number)</label>
                     <input type="text" id="payment_reference" name="payment_reference" class="form-control" 
                            placeholder="e.g. TRX123456 or Cheque No."
@@ -66,7 +66,7 @@ $formData = $isEdit ? $record : ($old ?? []);
             </div>
 
             <!-- Row 3: Received From and Description -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div id="details-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                 <!-- Received From -->
                 <div class="form-group">
                     <label for="received_from">Diterima Dari (Received From) <span style="color: red;">*</span></label>
@@ -131,6 +131,41 @@ $formData = $isEdit ? $record : ($old ?? []);
         <script>
             // Category management
             document.addEventListener('DOMContentLoaded', function() {
+                // Payment-method driven field visibility
+                const paymentMethodSelect = document.getElementById('payment_method');
+                const referenceField = document.getElementById('reference-field');
+                const detailsFields = document.getElementById('details-fields');
+                const receivedFromInput = document.getElementById('received_from');
+                const descriptionInput = document.getElementById('description');
+
+                function togglePaymentDependentFields() {
+                    if (!paymentMethodSelect) return;
+                    const method = paymentMethodSelect.value;
+
+                    // Until a method is selected, hide reference + received_from + description
+                    const hasMethod = method !== '';
+
+                    if (detailsFields) {
+                        detailsFields.style.display = hasMethod ? 'grid' : 'none';
+                    }
+                    if (receivedFromInput) {
+                        receivedFromInput.required = hasMethod;
+                    }
+                    if (descriptionInput) {
+                        descriptionInput.required = hasMethod;
+                    }
+
+                    // Reference: show only after method selection, and only for bank/cheque
+                    if (referenceField) {
+                        referenceField.style.display = (!hasMethod || method === 'cash') ? 'none' : '';
+                    }
+                }
+
+                if (paymentMethodSelect) {
+                    paymentMethodSelect.addEventListener('change', togglePaymentDependentFields);
+                    togglePaymentDependentFields();
+                }
+
                 const categoryEntriesContainer = document.getElementById('category-entries');
                 const addCategoryBtn = document.getElementById('add-category');
                 const form = document.querySelector('form');

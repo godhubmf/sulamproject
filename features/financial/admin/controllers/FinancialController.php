@@ -447,11 +447,15 @@ class FinancialController {
      * Show add deposit form
      */
     public function addDeposit(): array {
+        // Generate the next receipt number for preview
+        $nextReceiptNumber = $this->depositRepo->generateReceiptNumber();
+
         return [
             'title' => 'Add Deposit',
             'record' => null,
             'categoryColumns' => DepositAccountRepository::CATEGORY_COLUMNS,
             'categoryLabels' => DepositAccountRepository::CATEGORY_LABELS,
+            'nextReceiptNumber' => $nextReceiptNumber,
             'errors' => [],
             'old' => [],
         ];
