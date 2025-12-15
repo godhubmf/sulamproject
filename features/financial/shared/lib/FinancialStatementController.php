@@ -146,6 +146,11 @@ class FinancialStatementController
     {
         $results = [];
         foreach (DepositAccountRepository::CATEGORY_COLUMNS as $col) {
+            // Skip kontra category - it's for internal transfers only
+            if ($col === 'kontra') {
+                continue;
+            }
+            
             $sum = $this->getSum("SELECT SUM($col) FROM financial_deposit_accounts WHERE tx_date BETWEEN ? AND ?", $startDate, $endDate);
             if ($sum > 0) {
                 $results[] = [
@@ -164,6 +169,11 @@ class FinancialStatementController
     {
         $results = [];
         foreach (PaymentAccountRepository::CATEGORY_COLUMNS as $col) {
+            // Skip kontra category - it's for internal transfers only
+            if ($col === 'kontra') {
+                continue;
+            }
+            
             $sum = $this->getSum("SELECT SUM($col) FROM financial_payment_accounts WHERE tx_date BETWEEN ? AND ?", $startDate, $endDate);
             if ($sum > 0) {
                 $results[] = [

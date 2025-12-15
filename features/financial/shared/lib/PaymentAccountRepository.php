@@ -25,6 +25,7 @@ class PaymentAccountRepository
         'pengangkutan_perjalanan',
         'caj_bank',
         'lain_lain_perbelanjaan',
+        'kontra',
     ];
 
     /**
@@ -43,6 +44,7 @@ class PaymentAccountRepository
         'pengangkutan_perjalanan' => 'Pengangkutan & Perjalanan',
         'caj_bank' => 'Caj Bank',
         'lain_lain_perbelanjaan' => 'Lain-lain Perbelanjaan',
+        'kontra' => 'Kontra',
     ];
 
     public function __construct(mysqli $mysqli)
@@ -360,5 +362,57 @@ class PaymentAccountRepository
             $total += (float) ($row[$col] ?? 0);
         }
         return $total;
+    }
+
+    /**
+     * Update contra_pair_id and is_contra_transaction flag for a payment
+     *
+     * @param int $id Payment ID
+     * @param int $contraPairId Deposit ID that this payment is paired with
+     * @return bool
+     */
+    public function updateContraPair(int $id, int $contraPairId): bool
+    {
+        $stmt = $this->mysqli->prepare(
+            "UPDATE financial_payment_accounts 
+             SET contra_pair_id = ?, is_contra_transaction = 1 
+             WHERE id = ?"
+        );
+        $stmt->bind_param('ii', $contraPairId, $id);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
+    }
+
+    /**
+     * Check if a payment has a kontra amount
+     *
+     * @param array $data Payment data
+     * @return bool
+     */
+    public function hasKontraAmount(array $data): bool
+    {
+        return isset($data['kontra']) && $this->sanitizeAmount($data['kontra']) > 0;
+    }
+
+    /**
+     * Get the contra pair deposit ID for a payment
+     *
+     * @param int $id Payment ID
+     * @return int|null Deposit ID or null if no pair
+     */
+    public function getContraPairId(int $id): ?int
+    {
+        $stmt = $this->mysqli->prepare(
+            "SELECT contra_pair_id FROM financial_payment_accounts WHERE id = ?"
+        );
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+
+        return $row && $row['contra_pair_id'] ? (int)$row['contra_pair_id'] : null;
     }
 }

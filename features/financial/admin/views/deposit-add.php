@@ -42,7 +42,39 @@ $formData = $isEdit ? $record : ($old ?? []);
                 </div>
             </div>
 
-            <!-- Row 2: Payment Method and Reference Number -->
+            <!-- Category Amounts (MOVED HERE - BEFORE Payment Method) -->
+            <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Category Amounts (RM)</h4>
+            <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">Select a category and enter the amount.</p>
+
+            <div id="category-entries">
+                <!-- Initial category entry -->
+                <div class="category-entry" style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 1rem; margin-bottom: 1rem; align-items: start;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Category</label>
+                        <select class="form-control category-select" name="categories[]" required>
+                            <option value="">-- Select Category --</option>
+                            <?php foreach ($categoryColumns as $col): ?>
+                                <option value="<?php echo $col; ?>"><?php echo htmlspecialchars($categoryLabels[$col]); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Amount (RM)</label>
+                        <input type="number" class="form-control category-amount" name="amounts[]" step="0.01" min="0.01" placeholder="0.00" required>
+                    </div>
+                    <div style="padding-top: 28px;">
+                        <button type="button" class="btn btn-danger btn-sm remove-category" style="display: none;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="add-category" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem;">
+                <i class="fas fa-plus"></i> Add Another Category
+            </button>
+
+            <!-- Row 2: Payment Method and Reference Number (MOVED HERE - AFTER Category) -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                 <!-- Payment Method -->
                 <div class="form-group">
@@ -83,38 +115,6 @@ $formData = $isEdit ? $record : ($old ?? []);
                            value="<?php echo htmlspecialchars($formData['description'] ?? ''); ?>">
                 </div>
             </div>
-
-            <!-- Category Amounts -->
-            <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Category Amounts (RM)</h4>
-            <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">Select a category and enter the amount.</p>
-
-            <div id="category-entries">
-                <!-- Initial category entry -->
-                <div class="category-entry" style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 1rem; margin-bottom: 1rem; align-items: start;">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label>Category</label>
-                        <select class="form-control category-select" name="categories[]" required>
-                            <option value="">-- Select Category --</option>
-                            <?php foreach ($categoryColumns as $col): ?>
-                                <option value="<?php echo $col; ?>"><?php echo htmlspecialchars($categoryLabels[$col]); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label>Amount (RM)</label>
-                        <input type="number" class="form-control category-amount" name="amounts[]" step="0.01" min="0.01" placeholder="0.00" required>
-                    </div>
-                    <div style="padding-top: 28px;">
-                        <button type="button" class="btn btn-danger btn-sm remove-category" style="display: none;">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <button type="button" id="add-category" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem;">
-                <i class="fas fa-plus"></i> Add Another Category
-            </button>
 
             <!-- Hidden inputs for actual category data (will be populated on submit) -->
             <div id="hidden-category-inputs"></div>
@@ -161,14 +161,115 @@ $formData = $isEdit ? $record : ($old ?? []);
                     }
                 }
 
+                // Auto-fill fields when Kontra is selected
+                function checkForKontraAndAutoFill() {
+                    const categorySelects = document.querySelectorAll('.category-select');
+                    const addCategoryBtn = document.getElementById('add-category');
+                    const categoryEntriesContainer = document.getElementById('category-entries');
+                    let hasKontra = false;
+                    let kontraEntry = null;
+                    
+                    categorySelects.forEach(select => {
+                        if (select.value === 'kontra') {
+                            hasKontra = true;
+                            kontraEntry = select.closest('.category-entry');
+                        }
+                    });
+
+                    if (hasKontra) {
+                        const paymentMethod = paymentMethodSelect.value;
+                        
+                        // Remove all other category entries - Kontra must be alone!
+                        const allEntries = categoryEntriesContainer.querySelectorAll('.category-entry');
+                        allEntries.forEach(entry => {
+                            if (entry !== kontraEntry) {
+                                entry.remove();
+                            }
+                        });
+                        
+                        // Auto-fill "Received From"
+                        if (receivedFromInput && !receivedFromInput.dataset.userEdited) {
+                            receivedFromInput.value = 'Internal Transfer';
+                            receivedFromInput.readOnly = true;
+                            receivedFromInput.style.backgroundColor = '#f5f5f5';
+                        }
+                        
+                        // Auto-fill "Description" based on payment method
+                        if (descriptionInput && !descriptionInput.dataset.userEdited) {
+                            if (paymentMethod === 'cash') {
+                                descriptionInput.value = 'Transfer from Bank to Cash';
+                            } else if (paymentMethod === 'bank') {
+                                descriptionInput.value = 'Transfer from Cash to Bank';
+                            } else {
+                                descriptionInput.value = 'Internal Transfer';
+                            }
+                            descriptionInput.readOnly = true;
+                            descriptionInput.style.backgroundColor = '#f5f5f5';
+                        }
+
+                        // Disable "Add Another Category" button - Kontra must be alone
+                        if (addCategoryBtn) {
+                            addCategoryBtn.style.display = 'none';
+                        }
+                    } else {
+                        // Reset if Kontra is removed
+                        if (receivedFromInput) {
+                            receivedFromInput.readOnly = false;
+                            receivedFromInput.style.backgroundColor = '';
+                            if (!receivedFromInput.dataset.userEdited) {
+                                receivedFromInput.value = '';
+                            }
+                        }
+                        if (descriptionInput) {
+                            descriptionInput.readOnly = false;
+                            descriptionInput.style.backgroundColor = '';
+                            if (!descriptionInput.dataset.userEdited) {
+                                descriptionInput.value = '';
+                            }
+                        }
+
+                        // Re-enable "Add Another Category" button
+                        if (addCategoryBtn) {
+                            addCategoryBtn.style.display = 'inline-block';
+                        }
+                    }
+                }
+
+                // Track user edits to prevent overwriting
+                if (receivedFromInput) {
+                    receivedFromInput.addEventListener('input', function() {
+                        if (this.value !== 'Internal Transfer') {
+                            this.dataset.userEdited = 'true';
+                        }
+                    });
+                }
+                if (descriptionInput) {
+                    descriptionInput.addEventListener('input', function() {
+                        const autoValues = ['Transfer from Bank to Cash', 'Transfer from Cash to Bank', 'Internal Transfer'];
+                        if (!autoValues.includes(this.value)) {
+                            this.dataset.userEdited = 'true';
+                        }
+                    });
+                }
+
                 if (paymentMethodSelect) {
-                    paymentMethodSelect.addEventListener('change', togglePaymentDependentFields);
+                    paymentMethodSelect.addEventListener('change', function() {
+                        togglePaymentDependentFields();
+                        checkForKontraAndAutoFill();
+                    });
                     togglePaymentDependentFields();
                 }
 
                 const categoryEntriesContainer = document.getElementById('category-entries');
                 const addCategoryBtn = document.getElementById('add-category');
                 const form = document.querySelector('form');
+
+                // Listen for category changes to trigger auto-fill
+                categoryEntriesContainer.addEventListener('change', function(e) {
+                    if (e.target.classList.contains('category-select')) {
+                        checkForKontraAndAutoFill();
+                    }
+                });
 
                 // Load existing data if editing
                 <?php if ($isEdit && !empty($record)): ?>

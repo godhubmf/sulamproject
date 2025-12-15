@@ -290,7 +290,51 @@ class FinancialController {
             ];
         }
 
-        $this->paymentRepo->create($postData);
+        // Create the payment
+        $paymentId = $this->paymentRepo->create($postData);
+
+        // Check if this is a kontra transaction
+        if ($this->paymentRepo->hasKontraAmount($postData)) {
+            // Create the paired deposit transaction
+            $kontraAmount = $postData['kontra'];
+            
+            // Determine payment methods for contra pair
+            // Payment method indicates where money is LEAVING from
+            // If payment is 'cash', money leaves cash → goes to bank, so deposit should be 'bank'
+            // If payment is 'bank', money leaves bank → goes to cash, so deposit should be 'cash'
+            $paymentMethod = $postData['payment_method'] ?? 'cash';
+            $depositMethod = ($paymentMethod === 'cash') ? 'bank' : 'cash';
+            
+            // Prepare deposit data
+            $depositData = [
+                'tx_date' => $postData['tx_date'],
+                'description' => sprintf(
+                    '(Contra) Transfer from %s to %s - Ref: Payment #%s',
+                    ucfirst($paymentMethod),
+                    ucfirst($depositMethod),
+                    $paymentId
+                ),
+                'received_from' => 'Internal Transfer',
+                'payment_method' => $depositMethod,
+                'payment_reference' => 'CONTRA-' . date('YmdHis'),
+                'kontra' => $kontraAmount,
+            ];
+            
+            // Set all other categories to 0
+            foreach (DepositAccountRepository::CATEGORY_COLUMNS as $col) {
+                if ($col !== 'kontra') {
+                    $depositData[$col] = 0;
+                }
+            }
+            
+            // Create the deposit
+            $depositId = $this->depositRepo->create($depositData);
+            
+            // Update both records with contra pair IDs
+            $this->paymentRepo->updateContraPair($paymentId, $depositId);
+            $this->depositRepo->updateContraPair($depositId, $paymentId);
+        }
+
         return ['success' => true];
     }
 
@@ -347,7 +391,17 @@ class FinancialController {
             return ['success' => false, 'error' => 'Record not found.'];
         }
 
+        // Check if this payment has a contra pair
+        $contraPairId = $this->paymentRepo->getContraPairId($id);
+        
+        // Delete the payment
         $this->paymentRepo->delete($id);
+        
+        // If it has a contra pair, delete the paired deposit as well
+        if ($contraPairId) {
+            $this->depositRepo->delete($contraPairId);
+        }
+
         return ['success' => true];
     }
 
@@ -379,15 +433,28 @@ class FinancialController {
 
         // Check that at least one category has a positive amount
         $hasAmount = false;
+        $hasKontra = false;
+        $otherCategoriesCount = 0;
+        
         foreach (PaymentAccountRepository::CATEGORY_COLUMNS as $col) {
             if (!empty($data[$col]) && is_numeric($data[$col]) && $data[$col] > 0) {
                 $hasAmount = true;
-                break;
+                
+                if ($col === 'kontra') {
+                    $hasKontra = true;
+                } else {
+                    $otherCategoriesCount++;
+                }
             }
         }
 
         if (!$hasAmount) {
             $errors[] = 'At least one category must have an amount greater than 0.';
+        }
+
+        // Kontra transactions must ONLY have Kontra, no other categories
+        if ($hasKontra && $otherCategoriesCount > 0) {
+            $errors[] = 'Kontra (internal transfer) transactions cannot have other categories. Please use Kontra alone.';
         }
 
         return $errors;
@@ -475,7 +542,51 @@ class FinancialController {
             ];
         }
 
-        $this->depositRepo->create($postData);
+        // Create the deposit
+        $depositId = $this->depositRepo->create($postData);
+
+        // Check if this is a kontra transaction
+        if ($this->depositRepo->hasKontraAmount($postData)) {
+            // Create the paired payment transaction
+            $kontraAmount = $postData['kontra'];
+            
+            // Determine payment methods for contra pair
+            // Deposit method indicates where money is ENTERING
+            // If deposit is 'bank', money enters bank ← comes from cash, so payment should be 'cash'
+            // If deposit is 'cash', money enters cash ← comes from bank, so payment should be 'bank'
+            $depositMethod = $postData['payment_method'] ?? 'cash';
+            $paymentMethod = ($depositMethod === 'bank') ? 'cash' : 'bank';
+            
+            // Prepare payment data
+            $paymentData = [
+                'tx_date' => $postData['tx_date'],
+                'description' => sprintf(
+                    '(Contra) Transfer from %s to %s - Ref: Deposit #%s',
+                    ucfirst($paymentMethod),
+                    ucfirst($depositMethod),
+                    $depositId
+                ),
+                'paid_to' => 'Internal Transfer',
+                'payment_method' => $paymentMethod,
+                'payment_reference' => 'CONTRA-' . date('YmdHis'),
+                'kontra' => $kontraAmount,
+            ];
+            
+            // Set all other categories to 0
+            foreach (PaymentAccountRepository::CATEGORY_COLUMNS as $col) {
+                if ($col !== 'kontra') {
+                    $paymentData[$col] = 0;
+                }
+            }
+            
+            // Create the payment
+            $paymentId = $this->paymentRepo->create($paymentData);
+            
+            // Update both records with contra pair IDs
+            $this->depositRepo->updateContraPair($depositId, $paymentId);
+            $this->paymentRepo->updateContraPair($paymentId, $depositId);
+        }
+
         return ['success' => true];
     }
 
@@ -532,7 +643,17 @@ class FinancialController {
             return ['success' => false, 'error' => 'Record not found.'];
         }
 
+        // Check if this deposit has a contra pair
+        $contraPairId = $this->depositRepo->getContraPairId($id);
+        
+        // Delete the deposit
         $this->depositRepo->delete($id);
+        
+        // If it has a contra pair, delete the paired payment as well
+        if ($contraPairId) {
+            $this->paymentRepo->delete($contraPairId);
+        }
+
         return ['success' => true];
     }
 
@@ -561,15 +682,28 @@ class FinancialController {
 
         // Check that at least one category has a positive amount
         $hasAmount = false;
+        $hasKontra = false;
+        $otherCategoriesCount = 0;
+        
         foreach (DepositAccountRepository::CATEGORY_COLUMNS as $col) {
             if (!empty($data[$col]) && is_numeric($data[$col]) && $data[$col] > 0) {
                 $hasAmount = true;
-                break;
+                
+                if ($col === 'kontra') {
+                    $hasKontra = true;
+                } else {
+                    $otherCategoriesCount++;
+                }
             }
         }
 
         if (!$hasAmount) {
             $errors[] = 'At least one category must have an amount greater than 0.';
+        }
+
+        // Kontra transactions must ONLY have Kontra, no other categories
+        if ($hasKontra && $otherCategoriesCount > 0) {
+            $errors[] = 'Kontra (internal transfer) transactions cannot have other categories. Please use Kontra alone.';
         }
 
         return $errors;

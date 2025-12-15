@@ -26,24 +26,12 @@ $formData = $isEdit ? $record : ($old ?? []);
             <!-- Row 1: Voucher Number and Date -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                 <!-- Voucher Number -->
-                <div>
-                    <div class="form-group">
-                        <label for="voucher_number">No. Baucar (Voucher Number)</label>
-                        <input type="text" id="voucher_number" name="voucher_number" class="form-control" 
-                               value="<?php echo htmlspecialchars($nextVoucherNumber ?? $formData['voucher_number'] ?? ''); ?>"
-                               readonly>
-                        <small class="form-text text-muted">Auto-generated voucher number</small>
-                    </div>
-
-                    <div class="form-group" style="margin-top: 1rem;">
-                        <label for="payment_method">Kaedah Pembayaran (Payment Method) <span style="color: red;">*</span></label>
-                        <select id="payment_method" name="payment_method" class="form-control" required>
-                            <option value="">-- Select Method --</option>
-                            <option value="cash" <?php echo ($formData['payment_method'] ?? '') === 'cash' ? 'selected' : ''; ?>>Tunai (Cash)</option>
-                            <option value="cheque" <?php echo ($formData['payment_method'] ?? '') === 'cheque' ? 'selected' : ''; ?>>Bank (Cek)</option>
-                            <option value="bank" <?php echo ($formData['payment_method'] ?? '') === 'bank' ? 'selected' : ''; ?>>Bank (E-Banking)</option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label for="voucher_number">No. Baucar (Voucher Number)</label>
+                    <input type="text" id="voucher_number" name="voucher_number" class="form-control" 
+                           value="<?php echo htmlspecialchars($nextVoucherNumber ?? $formData['voucher_number'] ?? ''); ?>"
+                           readonly>
+                    <small class="form-text text-muted">Auto-generated voucher number</small>
                 </div>
 
                 <!-- Date -->
@@ -52,6 +40,49 @@ $formData = $isEdit ? $record : ($old ?? []);
                     <input type="date" id="tx_date" name="tx_date" class="form-control" required 
                            value="<?php echo htmlspecialchars($formData['tx_date'] ?? date('Y-m-d')); ?>">
                 </div>
+            </div>
+
+            <!-- Category Amounts (MOVED HERE - BEFORE Payment Method) -->
+            <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Category Amounts (RM)</h4>
+            <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">Select a category and enter the amount.</p>
+
+            <div id="category-entries">
+                <!-- Initial category entry -->
+                <div class="category-entry" style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 1rem; margin-bottom: 1rem; align-items: start;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Category</label>
+                        <select class="form-control category-select" name="categories[]" required>
+                            <option value="">-- Select Category --</option>
+                            <?php foreach ($categoryColumns as $col): ?>
+                                <option value="<?php echo $col; ?>"><?php echo htmlspecialchars($categoryLabels[$col]); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Amount (RM)</label>
+                        <input type="number" class="form-control category-amount" name="amounts[]" step="0.01" min="0.01" placeholder="0.00" required>
+                    </div>
+                    <div style="padding-top: 28px;">
+                        <button type="button" class="btn btn-danger btn-sm remove-category" style="display: none;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="add-category" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem;">
+                <i class="fas fa-plus"></i> Add Another Category
+            </button>
+
+            <!-- Payment Method (MOVED HERE - AFTER Category) -->
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="payment_method">Kaedah Pembayaran (Payment Method) <span style="color: red;">*</span></label>
+                <select id="payment_method" name="payment_method" class="form-control" required>
+                    <option value="">-- Select Method --</option>
+                    <option value="cash" <?php echo ($formData['payment_method'] ?? '') === 'cash' ? 'selected' : ''; ?>>Tunai (Cash)</option>
+                    <option value="cheque" <?php echo ($formData['payment_method'] ?? '') === 'cheque' ? 'selected' : ''; ?>>Bank (Cek)</option>
+                    <option value="bank" <?php echo ($formData['payment_method'] ?? '') === 'bank' ? 'selected' : ''; ?>>Bank (E-Banking)</option>
+                </select>
             </div>
 
             <div id="payee-fields" style="display: none;">
@@ -111,38 +142,6 @@ $formData = $isEdit ? $record : ($old ?? []);
                            value="<?php echo htmlspecialchars($formData['payee_bank_account'] ?? ''); ?>">
                 </div>
             </div>
-
-            <!-- Category Amounts -->
-            <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Category Amounts (RM)</h4>
-            <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.9rem;">Select a category and enter the amount.</p>
-
-            <div id="category-entries">
-                <!-- Initial category entry -->
-                <div class="category-entry" style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 1rem; margin-bottom: 1rem; align-items: start;">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label>Category</label>
-                        <select class="form-control category-select" name="categories[]" required>
-                            <option value="">-- Select Category --</option>
-                            <?php foreach ($categoryColumns as $col): ?>
-                                <option value="<?php echo $col; ?>"><?php echo htmlspecialchars($categoryLabels[$col]); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label>Amount (RM)</label>
-                        <input type="number" class="form-control category-amount" name="amounts[]" step="0.01" min="0.01" placeholder="0.00" required>
-                    </div>
-                    <div style="padding-top: 28px;">
-                        <button type="button" class="btn btn-danger btn-sm remove-category" style="display: none;">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <button type="button" id="add-category" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem;">
-                <i class="fas fa-plus"></i> Add Another Category
-            </button>
 
             <!-- Hidden inputs for actual category data (will be populated on submit) -->
             <div id="hidden-category-inputs"></div>
@@ -207,7 +206,120 @@ $formData = $isEdit ? $record : ($old ?? []);
                 toggleBankDetails();
 
                 // Run when payment method changes
-                paymentMethodSelect.addEventListener('change', toggleBankDetails);
+                paymentMethodSelect.addEventListener('change', function() {
+                    toggleBankDetails();
+                    checkForKontraAndAutoFill();
+                });
+
+                // Auto-fill fields when Kontra is selected
+                function checkForKontraAndAutoFill() {
+                    const categorySelects = document.querySelectorAll('.category-select');
+                    const addCategoryBtn = document.getElementById('add-category');
+                    const categoryEntriesContainer = document.getElementById('category-entries');
+                    let hasKontra = false;
+                    let kontraEntry = null;
+                    
+                    categorySelects.forEach(select => {
+                        if (select.value === 'kontra') {
+                            hasKontra = true;
+                            kontraEntry = select.closest('.category-entry');
+                        }
+                    });
+
+                    if (hasKontra) {
+                        const paymentMethod = paymentMethodSelect.value;
+                        
+                        // Remove all other category entries - Kontra must be alone!
+                        const allEntries = categoryEntriesContainer.querySelectorAll('.category-entry');
+                        allEntries.forEach(entry => {
+                            if (entry !== kontraEntry) {
+                                entry.remove();
+                            }
+                        });
+                        
+                        // Auto-fill "Paid To"
+                        if (paidToInput && !paidToInput.dataset.userEdited) {
+                            paidToInput.value = 'Internal Transfer';
+                            paidToInput.readOnly = true;
+                            paidToInput.style.backgroundColor = '#f5f5f5';
+                        }
+                        
+                        // Auto-fill "Description" based on payment method
+                        if (descriptionInput && !descriptionInput.dataset.userEdited) {
+                            if (paymentMethod === 'cash') {
+                                // Payment from cash = money leaving cash, going to bank
+                                descriptionInput.value = 'Transfer from Cash to Bank';
+                            } else if (paymentMethod === 'bank' || paymentMethod === 'cheque') {
+                                // Payment from bank = money leaving bank, going to cash
+                                descriptionInput.value = 'Transfer from Bank to Cash';
+                            } else {
+                                descriptionInput.value = 'Internal Transfer';
+                            }
+                            descriptionInput.readOnly = true;
+                            descriptionInput.style.backgroundColor = '#f5f5f5';
+                        }
+
+                        // Hide IC field and bank details for Kontra transactions
+                        if (icField) {
+                            icField.style.display = 'none';
+                        }
+                        if (bankDetailsSection) {
+                            bankDetailsSection.style.display = 'none';
+                        }
+
+                        // Hide "Add Another Category" button - Kontra must be alone
+                        if (addCategoryBtn) {
+                            addCategoryBtn.style.display = 'none';
+                        }
+                    } else {
+                        // Reset if Kontra is removed
+                        if (paidToInput) {
+                            paidToInput.readOnly = false;
+                            paidToInput.style.backgroundColor = '';
+                            if (!paidToInput.dataset.userEdited) {
+                                paidToInput.value = '';
+                            }
+                        }
+                        if (descriptionInput) {
+                            descriptionInput.readOnly = false;
+                            descriptionInput.style.backgroundColor = '';
+                            if (!descriptionInput.dataset.userEdited) {
+                                descriptionInput.value = '';
+                            }
+                        }
+
+                        // Re-show IC field and bank details based on payment method
+                        const paymentMethod = paymentMethodSelect.value;
+                        if (icField && paymentMethod) {
+                            icField.style.display = 'block';
+                        }
+                        if (bankDetailsSection && (paymentMethod === 'bank' || paymentMethod === 'cheque')) {
+                            bankDetailsSection.style.display = 'block';
+                        }
+
+                        // Re-show "Add Another Category" button
+                        if (addCategoryBtn) {
+                            addCategoryBtn.style.display = 'inline-block';
+                        }
+                    }
+                }
+
+                // Track user edits to prevent overwriting
+                if (paidToInput) {
+                    paidToInput.addEventListener('input', function() {
+                        if (this.value !== 'Internal Transfer') {
+                            this.dataset.userEdited = 'true';
+                        }
+                    });
+                }
+                if (descriptionInput) {
+                    descriptionInput.addEventListener('input', function() {
+                        const autoValues = ['Transfer from Bank to Cash', 'Transfer from Cash to Bank', 'Internal Transfer'];
+                        if (!autoValues.includes(this.value)) {
+                            this.dataset.userEdited = 'true';
+                        }
+                    });
+                }
             });
 
             // Category management
@@ -237,6 +349,87 @@ $formData = $isEdit ? $record : ($old ?? []);
                     if (e.target.closest('.remove-category')) {
                         e.target.closest('.category-entry').remove();
                         updateRemoveButtons();
+                    }
+                });
+
+                // Listen for category changes to trigger auto-fill
+                categoryEntriesContainer.addEventListener('change', function(e) {
+                    if (e.target.classList.contains('category-select')) {
+                        // Get reference to the checkForKontraAndAutoFill function from the first DOMContentLoaded block
+                        const paymentMethodSelect = document.getElementById('payment_method');
+                        const paidToInput = document.getElementById('paid_to');
+                        const descriptionInput = document.getElementById('description');
+                        
+                        // Check for kontra and auto-fill
+                        const categorySelects = document.querySelectorAll('.category-select');
+                        let hasKontra = false;
+                        
+                        categorySelects.forEach(select => {
+                            if (select.value === 'kontra') {
+                                hasKontra = true;
+                            }
+                        });
+
+                        if (hasKontra) {
+                            const paymentMethod = paymentMethodSelect.value;
+                            const icField = document.getElementById('ic-field');
+                            const bankDetailsSection = document.getElementById('bank-details-section');
+                            
+                            if (paidToInput && !paidToInput.dataset.userEdited) {
+                                paidToInput.value = 'Internal Transfer';
+                                paidToInput.readOnly = true;
+                                paidToInput.style.backgroundColor = '#f5f5f5';
+                            }
+                            
+                            if (descriptionInput && !descriptionInput.dataset.userEdited) {
+                                if (paymentMethod === 'cash') {
+                                    // Payment from cash = money leaving cash, going to bank
+                                    descriptionInput.value = 'Transfer from Cash to Bank';
+                                } else if (paymentMethod === 'bank' || paymentMethod === 'cheque') {
+                                    // Payment from bank = money leaving bank, going to cash
+                                    descriptionInput.value = 'Transfer from Bank to Cash';
+                                } else {
+                                    descriptionInput.value = 'Internal Transfer';
+                                }
+                                descriptionInput.readOnly = true;
+                                descriptionInput.style.backgroundColor = '#f5f5f5';
+                            }
+
+                            // Hide IC field and bank details for Kontra transactions
+                            if (icField) {
+                                icField.style.display = 'none';
+                            }
+                            if (bankDetailsSection) {
+                                bankDetailsSection.style.display = 'none';
+                            }
+                        } else {
+                            const icField = document.getElementById('ic-field');
+                            const bankDetailsSection = document.getElementById('bank-details-section');
+                            const paymentMethod = paymentMethodSelect.value;
+
+                            if (paidToInput) {
+                                paidToInput.readOnly = false;
+                                paidToInput.style.backgroundColor = '';
+                                if (!paidToInput.dataset.userEdited) {
+                                    paidToInput.value = '';
+                                }
+                            }
+                            if (descriptionInput) {
+                                descriptionInput.readOnly = false;
+                                descriptionInput.style.backgroundColor = '';
+                                if (!descriptionInput.dataset.userEdited) {
+                                    descriptionInput.value = '';
+                                }
+                            }
+
+                            // Re-show IC field and bank details based on payment method
+                            if (icField && paymentMethod) {
+                                icField.style.display = 'block';
+                            }
+                            if (bankDetailsSection && (paymentMethod === 'bank' || paymentMethod === 'cheque')) {
+                                bankDetailsSection.style.display = 'block';
+                            }
+                        }
                     }
                 });
 
