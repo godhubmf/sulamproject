@@ -318,13 +318,19 @@ class FinancialController {
             $depositMethod = ($paymentMethod === 'cash') ? 'bank' : 'cash';
             
             // Prepare deposit data
+            // Map payment methods to Malay terms
+            $methodMalay = [
+                'cash' => 'Tunai',
+                'bank' => 'Bank',
+                'cheque' => 'Cek'
+            ];
+            
             $depositData = [
                 'tx_date' => $postData['tx_date'],
                 'description' => sprintf(
-                    '(Contra) Transfer from %s to %s - Ref: Payment #%s',
-                    ucfirst($paymentMethod),
-                    ucfirst($depositMethod),
-                    $paymentId
+                    'Kontra: %s ke %s',
+                    $methodMalay[$paymentMethod] ?? ucfirst($paymentMethod),
+                    $methodMalay[$depositMethod] ?? ucfirst($depositMethod)
                 ),
                 'received_from' => 'Internal Transfer',
                 'payment_method' => $depositMethod,
@@ -585,13 +591,19 @@ class FinancialController {
             $paymentMethod = ($depositMethod === 'bank') ? 'cash' : 'bank';
             
             // Prepare payment data
+            // Map payment methods to Malay terms
+            $methodMalay = [
+                'cash' => 'Tunai',
+                'bank' => 'Bank',
+                'cheque' => 'Cek'
+            ];
+            
             $paymentData = [
                 'tx_date' => $postData['tx_date'],
                 'description' => sprintf(
-                    '(Contra) Transfer from %s to %s - Ref: Deposit #%s',
-                    ucfirst($paymentMethod),
-                    ucfirst($depositMethod),
-                    $depositId
+                    'Kontra: %s ke %s',
+                    $methodMalay[$paymentMethod] ?? ucfirst($paymentMethod),
+                    $methodMalay[$depositMethod] ?? ucfirst($depositMethod)
                 ),
                 'paid_to' => 'Internal Transfer',
                 'payment_method' => $paymentMethod,

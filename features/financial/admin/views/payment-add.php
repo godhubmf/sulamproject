@@ -248,10 +248,10 @@ $formData = $isEdit ? $record : ($old ?? []);
                         if (descriptionInput && !descriptionInput.dataset.userEdited) {
                             if (paymentMethod === 'cash') {
                                 // Payment from cash = money leaving cash, going to bank
-                                descriptionInput.value = 'Transfer from Cash to Bank';
+                                descriptionInput.value = 'Kontra: Tunai ke Bank';
                             } else if (paymentMethod === 'bank' || paymentMethod === 'cheque') {
                                 // Payment from bank = money leaving bank, going to cash
-                                descriptionInput.value = 'Transfer from Bank to Cash';
+                                descriptionInput.value = 'Kontra: Bank ke Tunai';
                             } else {
                                 descriptionInput.value = 'Internal Transfer';
                             }
@@ -314,7 +314,7 @@ $formData = $isEdit ? $record : ($old ?? []);
                 }
                 if (descriptionInput) {
                     descriptionInput.addEventListener('input', function() {
-                        const autoValues = ['Transfer from Bank to Cash', 'Transfer from Cash to Bank', 'Internal Transfer'];
+                        const autoValues = ['Kontra: Bank ke Tunai', 'Kontra: Tunai ke Bank', 'Internal Transfer'];
                         if (!autoValues.includes(this.value)) {
                             this.dataset.userEdited = 'true';
                         }
@@ -384,10 +384,10 @@ $formData = $isEdit ? $record : ($old ?? []);
                             if (descriptionInput && !descriptionInput.dataset.userEdited) {
                                 if (paymentMethod === 'cash') {
                                     // Payment from cash = money leaving cash, going to bank
-                                    descriptionInput.value = 'Transfer from Cash to Bank';
+                                    descriptionInput.value = 'Kontra: Tunai ke Bank';
                                 } else if (paymentMethod === 'bank' || paymentMethod === 'cheque') {
                                     // Payment from bank = money leaving bank, going to cash
-                                    descriptionInput.value = 'Transfer from Bank to Cash';
+                                    descriptionInput.value = 'Kontra: Bank ke Tunai';
                                 } else {
                                     descriptionInput.value = 'Internal Transfer';
                                 }

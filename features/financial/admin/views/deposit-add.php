@@ -197,9 +197,9 @@ $formData = $isEdit ? $record : ($old ?? []);
                         // Auto-fill "Description" based on payment method
                         if (descriptionInput && !descriptionInput.dataset.userEdited) {
                             if (paymentMethod === 'cash') {
-                                descriptionInput.value = 'Transfer from Bank to Cash';
+                                descriptionInput.value = 'Kontra: Bank ke Tunai';
                             } else if (paymentMethod === 'bank') {
-                                descriptionInput.value = 'Transfer from Cash to Bank';
+                                descriptionInput.value = 'Kontra: Tunai ke Bank';
                             } else {
                                 descriptionInput.value = 'Internal Transfer';
                             }
@@ -245,7 +245,7 @@ $formData = $isEdit ? $record : ($old ?? []);
                 }
                 if (descriptionInput) {
                     descriptionInput.addEventListener('input', function() {
-                        const autoValues = ['Transfer from Bank to Cash', 'Transfer from Cash to Bank', 'Internal Transfer'];
+                        const autoValues = ['Kontra: Bank ke Tunai', 'Kontra: Tunai ke Bank', 'Internal Transfer'];
                         if (!autoValues.includes(this.value)) {
                             this.dataset.userEdited = 'true';
                         }
